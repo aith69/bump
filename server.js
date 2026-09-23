@@ -4,22 +4,21 @@ const path = require('path');
 const crypto = require('crypto');
 const { pipeline, Transform } = require('stream');
 
-const PORT = process.env.PORT || 3000;
-// di default solo in locale (dietro un reverse proxy HTTPS); per ascoltare sulla rete: HOST=192.168.x.x
-const HOST = process.env.HOST || '127.0.0.1';
-
-const DIR = path.join(__dirname, 'tmp');
-const MAX_BYTES = 50 * 1024 * 1024;   // 50 MB per file
-const MAX_FILES = 20;                 // file in attesa contemporaneamente su tutto il server
-const MAX_FILES_PER_IP = 3;           // ... e per singolo indirizzo IP
-const MAX_STREAMS_PER_IP = 10;        // dispositivi collegati contemporaneamente da uno stesso IP
-const PAIR_WINDOW = 300;             // ms: distanza massima tra i due bump per abbinarli
-const SETTLE = 500;                   // ms: si attende un attimo prima di decidere, per accorgersi di bump "intrusi"
-const LOOKBACK = PAIR_WINDOW + SETTLE;
-const TTL = 5 * 60 * 1000;            // un file non ritirato viene cancellato dopo 5 minuti
-const TOKEN_TTL = 30 * 1000;          // il link di download dopo il bump vale 30 secondi
-const SHARE_TTL = 3 * 60 * 1000;      // il link generato con "Crea QR" vale 3 minuti, per dare tempo di inquadrarlo
-
+const {
+  PORT,
+  HOST,
+  DIR,
+  MAX_BYTES,
+  MAX_FILES,
+  MAX_FILES_PER_IP,
+  MAX_STREAMS_PER_IP,
+  PAIR_WINDOW,
+  SETTLE,
+  LOOKBACK,
+  TTL,
+  TOKEN_TTL,
+  SHARE_TTL,
+} = require("./src/config");
 // all'avvio la cartella temporanea parte sempre vuota
 fs.rmSync(DIR, { recursive: true, force: true });
 fs.mkdirSync(DIR);
@@ -58,9 +57,6 @@ function dropPending(d) {
 }
 
 
-app.get('/qrcode.min.js', (req, res) => {
-  res.sendFile(path.join(__dirname, 'qrcode.min.js'));
-});
 
 // canale server -> dispositivo (stato del proprio file, ordine di download, conferma)
 app.get('/events', (req, res) => {
