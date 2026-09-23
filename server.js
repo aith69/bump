@@ -56,7 +56,7 @@ function dropPending(d) {
   d.pending = null;
 }
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
 app.get('/qrcode.min.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'qrcode.min.js'));
