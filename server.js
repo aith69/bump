@@ -31,6 +31,7 @@ const hits = new Map();      // "tipo:ip" -> [timestamp...]  (limiti di frequenz
 
 const app = express();
 app.disable('x-powered-by');
+app.use(express.static(path.join(__dirname, 'public')));
 // dietro nginx serve leggere l'IP reale da X-Forwarded-For; TRUST_PROXY=true per fidarsi di qualsiasi proxy
 const tp = process.env.TRUST_PROXY;
 app.set('trust proxy', tp === 'true' ? true : tp || 'loopback, uniquelocal');
@@ -56,7 +57,6 @@ function dropPending(d) {
   d.pending = null;
 }
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
 app.get('/qrcode.min.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'qrcode.min.js'));
