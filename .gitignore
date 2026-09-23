@@ -1,2 +1,5 @@
 node_modules/
 .npm/
+tmp/
+.bash_history
+.lesshst
