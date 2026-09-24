@@ -4,7 +4,7 @@ new QRCode($('#qrcode'), {
   text: location.host,
   width: 80,
   height: 80,
-  colorDark: '#1c2330',
+  colorDark: '#f5f5f5',
   colorLight: getComputedStyle(document.documentElement)
     .getPropertyValue('--bg')
     .trim(),
@@ -126,7 +126,7 @@ $('#share').onclick = async () => {
     text: location.origin + url,
     width: 160,
     height: 160,
-    colorDark: '#1c2330',
+    colorDark: '#f5f5f5',
     colorLight: getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(),
     correctLevel: QRCode.CorrectLevel.L
   });
