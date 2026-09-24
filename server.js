@@ -8,6 +8,7 @@ const { devices, hits } = state;
 const createPairing = require('./src/services/pairing');
 const createRateLimiter = require('./src/services/rate-limit');
 const createCleanup = require('./src/services/cleanup');
+const createEventsRouter = require('./src/routes/events');
 const {
   PORT,
   HOST,
@@ -58,31 +59,15 @@ function dropPending(d) {
   d.pending = null;
 }
 
-
-
-// canale server -> dispositivo (stato del proprio file, ordine di download, conferma)
-app.get('/events', (req, res) => {
-  const id = String(req.query.id);
-  if (!ID_RE.test(id)) return res.sendStatus(400);
-  const streams = [...devices.values()].filter((x) => x.res && x.ip === req.ip && x.id !== id).length;
-  if (streams >= MAX_STREAMS_PER_IP) return res.sendStatus(429);
-
-  let d = devices.get(id);
-  if (!d) devices.set(id, (d = { id, res: null, ip: req.ip, pending: null, uploading: false }));
-  d.ip = req.ip;
-  d.res = res;
-
-  res.set({
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    Connection: 'keep-alive',
-  });
-  res.flushHeaders();
-  send(d, 'state', stateOf(d));
-  req.on('close', () => {
-    if (d.res === res) d.res = null;
-  });
-});
+app.use(
+  createEventsRouter({
+    devices,
+    maxStreamsPerIp: MAX_STREAMS_PER_IP,
+    idRegex: ID_RE,
+    send,
+    stateOf,
+  })
+);
 
 // upload in streaming (niente memoria) con limite di dimensione
 app.post('/upload', (req, res) => {
