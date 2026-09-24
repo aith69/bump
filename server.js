@@ -9,6 +9,7 @@ const createPairing = require('./src/services/pairing');
 const createRateLimiter = require('./src/services/rate-limit');
 const createCleanup = require('./src/services/cleanup');
 const createEventsRouter = require('./src/routes/events');
+const createFileRouter = require('./src/routes/file');
 const {
   PORT,
   HOST,
@@ -68,6 +69,14 @@ app.use(
     stateOf,
   })
 );
+app.use(
+  createFileRouter({
+    devices,
+    dropPending,
+    send,
+    stateOf,
+  })
+);
 
 // upload in streaming (niente memoria) con limite di dimensione
 app.post('/upload', (req, res) => {
@@ -111,14 +120,6 @@ app.post('/upload', (req, res) => {
   });
 });
 
-// rimozione manuale del proprio file in attesa (la X nella pagina)
-app.delete('/file', (req, res) => {
-  const d = devices.get(String(req.query.id));
-  if (!d) return res.sendStatus(404);
-  dropPending(d);
-  send(d, 'state', stateOf(d));
-  res.sendStatus(200);
-});
 
 // genera un link di download monouso per il proprio file in attesa, da mostrare come QR
 // (alternativa al bump, per quando l'accelerometro non è disponibile o non funziona)
