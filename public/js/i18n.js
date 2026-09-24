@@ -1,5 +1,9 @@
 (() => {
-  const supported = ['it', 'en'];
+  const supported = [
+    'it', 'en', 'de', 'es', 'fr', 'pt',
+    'nl', 'pl', 'sv', 'no', 'tr',
+    'ru', 'uk', 'ar', 'hi', 'ja', 'ko', 'zh'
+  ];
   const fallback = 'it';
 
   function getLocale() {

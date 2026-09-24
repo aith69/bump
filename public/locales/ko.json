@@ -1,0 +1,18 @@
+{
+  "upload": "파일 업로드",
+  "removeFile": "파일 제거",
+  "createDownloadQr": "다운로드 QR 코드 만들기",
+  "shareInstruction": "이 코드를 스캔하여 파일을 다운로드하세요",
+  "close": "닫기",
+  "touchHint": "파일을 업로드한 다음 이 휴대폰을 다른 기기에 부딪히세요.",
+  "desktopHint": "다른 기기가 부딪힐 때 스페이스바를 누르세요.",
+  "uploading": "업로드 중…",
+  "sent": "전송됨 ✓",
+  "received": "수신됨 ✓",
+  "maxFileSize": "최대 50MB",
+  "tooManyAttempts": "시도가 너무 많습니다. 기다려 주세요",
+  "serverBusy": "서버가 사용 중입니다. 다시 시도하세요",
+  "fileAlreadyWaiting": "이미 대기 중인 파일이 있습니다",
+  "failed": "실패",
+  "shareValidFor": "{time} 동안 유효"
+}

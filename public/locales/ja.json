@@ -1,0 +1,18 @@
+{
+  "upload": "ファイルをアップロード",
+  "removeFile": "ファイルを削除",
+  "createDownloadQr": "ダウンロードQRコードを作成",
+  "shareInstruction": "このコードをスキャンしてファイルをダウンロード",
+  "close": "閉じる",
+  "touchHint": "ファイルをアップロードしてから、このスマートフォンをもう一方のデバイスに近づけてください。",
+  "desktopHint": "もう一方のデバイスを近づけたときにスペースキーを押してください。",
+  "uploading": "アップロード中…",
+  "sent": "送信済み ✓",
+  "received": "受信済み ✓",
+  "maxFileSize": "最大50MB",
+  "tooManyAttempts": "試行回数が多すぎます。しばらくお待ちください",
+  "serverBusy": "サーバーが混み合っています。もう一度お試しください",
+  "fileAlreadyWaiting": "ファイルはすでに待機中です",
+  "failed": "失敗",
+  "shareValidFor": "{time} 有効"
+}

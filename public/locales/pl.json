@@ -1,0 +1,18 @@
+{
+  "upload": "Prześlij plik",
+  "removeFile": "Usuń plik",
+  "createDownloadQr": "Utwórz kod QR do pobrania",
+  "shareInstruction": "Zeskanuj ten kod, aby pobrać plik",
+  "close": "Zamknij",
+  "touchHint": "Prześlij plik, a następnie zbliż ten telefon do drugiego urządzenia.",
+  "desktopHint": "Naciśnij spację, gdy drugie urządzenie się zbliży.",
+  "uploading": "Przesyłanie…",
+  "sent": "Wysłano ✓",
+  "received": "Odebrano ✓",
+  "maxFileSize": "Maksymalnie 50 MB",
+  "tooManyAttempts": "Zbyt wiele prób, poczekaj",
+  "serverBusy": "Serwer zajęty, spróbuj ponownie",
+  "fileAlreadyWaiting": "Plik już czeka",
+  "failed": "Niepowodzenie",
+  "shareValidFor": "Ważny przez {time}"
+}

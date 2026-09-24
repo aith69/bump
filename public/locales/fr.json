@@ -1,0 +1,18 @@
+{
+  "upload": "Téléverser un fichier",
+  "removeFile": "Supprimer le fichier",
+  "createDownloadQr": "Créer un QR code de téléchargement",
+  "shareInstruction": "Scannez ce code pour télécharger le fichier",
+  "close": "Fermer",
+  "touchHint": "Téléversez un fichier, puis approchez ce téléphone de l’autre appareil.",
+  "desktopHint": "Appuyez sur la barre d’espace lorsque l’autre appareil s’approche.",
+  "uploading": "Téléversement…",
+  "sent": "Envoyé ✓",
+  "received": "Reçu ✓",
+  "maxFileSize": "Maximum 50 Mo",
+  "tooManyAttempts": "Trop de tentatives, veuillez patienter",
+  "serverBusy": "Serveur occupé, réessayez",
+  "fileAlreadyWaiting": "Un fichier est déjà en attente",
+  "failed": "Échec",
+  "shareValidFor": "Valable {time}"
+}

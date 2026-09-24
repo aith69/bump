@@ -1,0 +1,18 @@
+{
+  "upload": "Dosya yükle",
+  "removeFile": "Dosyayı kaldır",
+  "createDownloadQr": "İndirme QR kodu oluştur",
+  "shareInstruction": "Dosyayı indirmek için bu kodu tarayın",
+  "close": "Kapat",
+  "touchHint": "Bir dosya yükleyin, ardından bu telefonu diğer cihaza dokundurun.",
+  "desktopHint": "Diğer cihaz dokunduğunda boşluk tuşuna basın.",
+  "uploading": "Yükleniyor…",
+  "sent": "Gönderildi ✓",
+  "received": "Alındı ✓",
+  "maxFileSize": "En fazla 50 MB",
+  "tooManyAttempts": "Çok fazla deneme, lütfen bekleyin",
+  "serverBusy": "Sunucu meşgul, tekrar deneyin",
+  "fileAlreadyWaiting": "Zaten bekleyen bir dosya var",
+  "failed": "Başarısız",
+  "shareValidFor": "{time} boyunca geçerli"
+}

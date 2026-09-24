@@ -1,0 +1,18 @@
+{
+  "upload": "Datei hochladen",
+  "removeFile": "Datei entfernen",
+  "createDownloadQr": "Download-QR-Code erstellen",
+  "shareInstruction": "Diesen Code scannen, um die Datei herunterzuladen",
+  "close": "Schließen",
+  "touchHint": "Lade eine Datei hoch und halte dann dieses Telefon an das andere Gerät.",
+  "desktopHint": "Drücke die Leertaste, während das andere Gerät anstößt.",
+  "uploading": "Wird hochgeladen…",
+  "sent": "Gesendet ✓",
+  "received": "Empfangen ✓",
+  "maxFileSize": "Maximal 50 MB",
+  "tooManyAttempts": "Zu viele Versuche, bitte warten",
+  "serverBusy": "Server beschäftigt, bitte erneut versuchen",
+  "fileAlreadyWaiting": "Eine Datei wartet bereits",
+  "failed": "Fehlgeschlagen",
+  "shareValidFor": "Gültig für {time}"
+}

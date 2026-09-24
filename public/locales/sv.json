@@ -1,0 +1,18 @@
+{
+  "upload": "Ladda upp fil",
+  "removeFile": "Ta bort fil",
+  "createDownloadQr": "Skapa QR-kod för nedladdning",
+  "shareInstruction": "Skanna den här koden för att ladda ner filen",
+  "close": "Stäng",
+  "touchHint": "Ladda upp en fil och bumpa sedan den här telefonen mot den andra enheten.",
+  "desktopHint": "Tryck på blankstegstangenten medan den andra enheten bumpas.",
+  "uploading": "Laddar upp…",
+  "sent": "Skickat ✓",
+  "received": "Mottaget ✓",
+  "maxFileSize": "Maximalt 50 MB",
+  "tooManyAttempts": "För många försök, vänta",
+  "serverBusy": "Servern är upptagen, försök igen",
+  "fileAlreadyWaiting": "En fil väntar redan",
+  "failed": "Misslyckades",
+  "shareValidFor": "Giltig i {time}"
+}

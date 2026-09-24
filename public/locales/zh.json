@@ -1,0 +1,18 @@
+{
+  "upload": "上传文件",
+  "removeFile": "删除文件",
+  "createDownloadQr": "创建下载二维码",
+  "shareInstruction": "扫描此二维码下载文件",
+  "close": "关闭",
+  "touchHint": "上传文件，然后将此手机与其他设备碰一碰。",
+  "desktopHint": "当另一台设备碰一碰时，按下空格键。",
+  "uploading": "上传中…",
+  "sent": "已发送 ✓",
+  "received": "已接收 ✓",
+  "maxFileSize": "最大 50 MB",
+  "tooManyAttempts": "尝试次数过多，请稍候",
+  "serverBusy": "服务器繁忙，请重试",
+  "fileAlreadyWaiting": "已有文件在等待",
+  "failed": "失败",
+  "shareValidFor": "有效期 {time}"
+}

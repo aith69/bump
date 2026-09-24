@@ -1,0 +1,18 @@
+{
+  "upload": "Bestand uploaden",
+  "removeFile": "Bestand verwijderen",
+  "createDownloadQr": "Download-QR-code maken",
+  "shareInstruction": "Scan deze code om het bestand te downloaden",
+  "close": "Sluiten",
+  "touchHint": "Upload een bestand en bump deze telefoon vervolgens tegen het andere apparaat.",
+  "desktopHint": "Druk op de spatiebalk terwijl het andere apparaat bumpt.",
+  "uploading": "Uploaden…",
+  "sent": "Verzonden ✓",
+  "received": "Ontvangen ✓",
+  "maxFileSize": "Maximaal 50 MB",
+  "tooManyAttempts": "Te veel pogingen, even wachten",
+  "serverBusy": "Server bezet, probeer opnieuw",
+  "fileAlreadyWaiting": "Er wacht al een bestand",
+  "failed": "Mislukt",
+  "shareValidFor": "Geldig voor {time}"
+}
