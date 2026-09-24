@@ -5,9 +5,8 @@ const crypto = require('crypto');
 const { pipeline, Transform } = require('stream');
 const state = require('./src/store/memory');
 const { devices, hits } = state;
+const createPairing = require('./src/services/pairing');
 const createRateLimiter = require('./src/services/rate-limit');
-const limited = createRateLimiter(hits);
-
 const {
   PORT,
   HOST,
@@ -23,6 +22,17 @@ const {
   TOKEN_TTL,
   SHARE_TTL,
 } = require("./src/config");
+const limited = createRateLimiter(hits);
+const pairing = createPairing({
+  state,
+  devices,
+  send,
+  pairWindow: PAIR_WINDOW,
+  settle: SETTLE,
+  lookback: LOOKBACK,
+  tokenTtl: TOKEN_TTL,
+});
+
 // all'avvio la cartella temporanea parte sempre vuota
 fs.rmSync(DIR, { recursive: true, force: true });
 fs.mkdirSync(DIR);
@@ -151,63 +161,9 @@ app.post('/bump', (req, res) => {
   if (limited('bump', req.ip, 12, 60 * 1000)) return res.sendStatus(429);
   res.sendStatus(200);
 
-  const now = Date.now();
-  state.bumps = state.bumps.filter((b) => now - b.t <= LOOKBACK && b.id !== id);
-  state.bumps.push({ id, type, t: now });
-  setTimeout(evaluate, SETTLE);
+  pairing.record(id, type);
+
 });
-
-function evaluate() {
-  const now = Date.now();
-
-  state.bumps = state.bumps.filter((b) => now - b.t <= LOOKBACK);
-
-  // Servono esattamente due bump
-  if (state.bumps.length !== 2) return;
-
-  const [aBump, bBump] = state.bumps;
-
-  // Devono provenire da due dispositivi diversi
-  if (aBump.id === bBump.id) return;
-
-  // Devono essere abbastanza ravvicinati
-  if (Math.abs(aBump.t - bBump.t) > PAIR_WINDOW) return;
-
-  // Sono ammesse:
-  //   key + motion   -> PC + telefono
-  //   motion + motion -> telefono + telefono
-  // key + key non è valido
-  const validPair =
-    (aBump.type === 'key' && bBump.type === 'motion') ||
-    (aBump.type === 'motion' && bBump.type === 'key') ||
-    (aBump.type === 'motion' && bBump.type === 'motion');
-
-  if (!validPair) return;
-
-  const a = devices.get(aBump.id);
-  const b = devices.get(bBump.id);
-
-  if (!a || !b) return;
-
-  // Esattamente uno dei due deve avere un file
-  if (!!a.pending === !!b.pending) return;
-
-  const [sender, receiver] = a.pending ? [a, b] : [b, a];
-
-  // Il destinatario deve essere ancora collegato
-  if (!receiver.res) return;
-
-  const token = crypto.randomBytes(16).toString('hex');
-
-  sender.pending.token = token;
-  sender.pending.tokenExp = now + TOKEN_TTL;
-
-  state.bumps = [];
-
-  send(receiver, 'download', {
-    url: `/download?t=${token}`
-  });
-}
 
 // alcuni browser sondano l'URL con HEAD: non deve consumare il file
 app.head('/download', (req, res) => res.sendStatus(200));
