@@ -22,9 +22,7 @@ let ID;
 try { ID = sessionStorage.id || (sessionStorage.id = makeId()); } catch { ID = makeId(); }
 
 const isTouch = matchMedia('(pointer: coarse)').matches;
-$('#hint').textContent = isTouch
-  ? 'Carica un file, poi fai scontrare questo telefono con l\'altro dispositivo.'
-  : 'Premi la barra spaziatrice mentre l\'altro dispositivo fa bump.';
+$('#hint').textContent = t(isTouch ? 'touchHint' : 'desktopHint');
 document.querySelector('meta[name="theme-color"]').content = getComputedStyle(document.body).backgroundColor;
 
 // ---------- stato e schermata ----------
@@ -33,7 +31,7 @@ let pending = null, busy = false, flash = '', flashTimer = 0, sharing = false;
 function render() {
   const showMsg = busy || !!flash;
   $('#msg').hidden = !showMsg;
-  $('#msg').textContent = busy ? 'Caricamento…' : flash;
+  $('#msg').textContent = busy ? t('uploading') : flash;
   $('#file').hidden = showMsg || !pending || sharing;
   $('#shareBox').hidden = showMsg || !pending || !sharing;
   $('#qr').hidden = sharing;
@@ -57,7 +55,7 @@ es.addEventListener('state', (e) => {
   render();
 });
 es.addEventListener('done', () => {
-  showFlash('Inviato ✓');
+  showFlash(t('sent'));
   setTimeout(() => location.reload(), 800);
 });
 es.addEventListener('download', (e) => {
@@ -67,24 +65,24 @@ es.addEventListener('download', (e) => {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  showFlash('Ricevuto ✓');
+  showFlash(t('received'));
   setTimeout(() => location.reload(), 800);
 });
 
 // ---------- upload / rimozione ----------
 async function upload(file) {
   if (!file || busy || pending) return;
-  if (file.size > MAX) return showFlash('Massimo 50 MB');
+  if (file.size > MAX) return showFlash(t('maxFileSize'));
   busy = true; render();
   let msg = '';
   try {
     const r = await fetch(`/upload?id=${ID}&name=${encodeURIComponent(file.name)}`, { method: 'POST', body: file });
-    if (r.status === 413) msg = 'Massimo 50 MB';
-    else if (r.status === 429) msg = 'Troppi tentativi, aspetta';
-    else if (r.status === 503) msg = 'Server occupato, riprova';
-    else if (r.status === 409) msg = 'C\'è già un file in attesa';
-    else if (!r.ok) msg = 'Non riuscito';
-  } catch { msg = 'Non riuscito'; }
+    if (r.status === 413) msg = t('maxFileSize');
+    else if (r.status === 429) msg = t('tooManyAttempts');
+    else if (r.status === 503) msg = t('serverBusy');
+    else if (r.status === 409) msg = t('fileAlreadyWaiting');
+    else if (!r.ok) msg = t('failed');
+  } catch { msg = t('failed'); }
   busy = false;
   msg ? showFlash(msg) : render();
 }
@@ -103,7 +101,9 @@ function startCountdown(ms) {
       return;
     }
     const s = Math.ceil(left / 1000);
-    $('#shareTimer').textContent = `Valido per ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+    $('#shareTimer').textContent = t('shareValidFor', {
+      time: `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`,
+    });
   };
   tick();
   shareTimer = setInterval(tick, 1000);
@@ -116,8 +116,10 @@ $('#share').onclick = async () => {
   let r;
   try {
     r = await fetch(`/share?id=${ID}`, { method: 'POST' });
-  } catch { return showFlash('Non riuscito'); }
-  if (!r.ok) return showFlash(r.status === 429 ? 'Troppi tentativi, aspetta' : 'Non riuscito');
+  } catch { return showFlash(t('failed')); }
+  if (!r.ok) return showFlash(
+    r.status === 429 ? t('tooManyAttempts') : t('failed')
+  );
   const { url } = await r.json();
   $('#shareqr').innerHTML = '';
   new QRCode($('#shareqr'), {
@@ -129,7 +131,7 @@ $('#share').onclick = async () => {
     correctLevel: QRCode.CorrectLevel.L
   });
   sharing = true;
-  startCountdown(1 * 60 * 1000);   // 1 minuto: deve combaciare con SHARE_TTL in server.js
+  startCountdown(3 * 60 * 1000);   // deve combaciare con SHARE_TTL in server.js
   render();
 };
 $('#shareclose').onclick = () => { clearInterval(shareTimer); sharing = false; render(); };

@@ -1,0 +1,18 @@
+{
+  "upload": "Upload file",
+  "removeFile": "Remove file",
+  "createDownloadQr": "Create download QR code",
+  "shareInstruction": "Scan this code to download the file",
+  "close": "Close",
+  "touchHint": "Upload a file, then bump this phone against the other device.",
+  "desktopHint": "Press the space bar while the other device bumps.",
+  "uploading": "Uploading…",
+  "sent": "Sent ✓",
+  "received": "Received ✓",
+  "maxFileSize": "Maximum 50 MB",
+  "tooManyAttempts": "Too many attempts, please wait",
+  "serverBusy": "Server busy, try again",
+  "fileAlreadyWaiting": "A file is already waiting",
+  "failed": "Failed",
+  "shareValidFor": "Valid for {time}"
+}

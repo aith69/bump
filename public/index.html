@@ -19,25 +19,43 @@
 </div>
 
     <div class="box" id="stage">
-      <button class="big" id="pick" type="button">Carica file</button>
+      <button class="big" id="pick" type="button" data-i18n="upload">Carica file</button>
+
       <div class="chip" id="file" hidden>
         <span id="name"></span>
-        <button id="share" type="button" aria-label="Crea QR per il download">QR</button>
-        <button id="remove" type="button" aria-label="Rimuovi il file">✕</button>
+        <button
+          id="share"
+          type="button"
+          aria-label="Crea QR per il download"
+          data-i18n-aria-label="createDownloadQr"
+        >QR</button>
+
+        <button
+          id="remove"
+          type="button"
+          aria-label="Rimuovi il file"
+          data-i18n-aria-label="removeFile"
+        >✕</button>
       </div>
+
       <div id="shareBox" hidden>
         <div id="shareqr"></div>
-        <p id="shareTimer">Fai scansionare questo codice per scaricare il file</p>
-        <button class="big" id="shareclose" type="button">Chiudi</button>
+        <p id="shareTimer" data-i18n="shareInstruction">
+          Fai scansionare questo codice per scaricare il file
+        </p>
+        <button class="big" id="shareclose" type="button" data-i18n="close">
+          Chiudi
+        </button>
       </div>
+
       <div class="big msg" id="msg" role="status" hidden></div>
       <input type="file" id="input" hidden>
     </div>
+
     <p id="hint"></p>
   </main>
 
 <script src="/qrcode.min.js"></script>
-
-<script src="/js/app.js"></script>
+<script src="/js/i18n.js"></script>
 </body>
 </html>
