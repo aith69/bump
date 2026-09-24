@@ -11,6 +11,7 @@ const createCleanup = require('./src/services/cleanup');
 const createEventsRouter = require('./src/routes/events');
 const createFileRouter = require('./src/routes/file');
 const createBumpRouter = require('./src/routes/bump');
+const createDownloadRouter = require('./src/routes/download');
 const createShareRouter = require('./src/routes/share');
 const {
   PORT,
@@ -143,23 +144,13 @@ app.use(
 );
 
 // alcuni browser sondano l'URL con HEAD: non deve consumare il file
-app.head('/download', (req, res) => res.sendStatus(200));
-
-// download una tantum, con link monouso ricevuto solo dal dispositivo abbinato
-app.get('/download', (req, res) => {
-  const t = String(req.query.t);
-  const now = Date.now();
-  const owner = [...devices.values()].find((x) => x.pending && x.pending.token === t && now < x.pending.tokenExp);
-  if (!owner) return res.sendStatus(404);
-
-  const p = owner.pending;
-  owner.pending = null;
-  send(owner, 'state', stateOf(owner));
-  res.download(p.file, p.name, (err) => {
-    fs.unlink(p.file, () => {});
-    if (!err) send(owner, 'done', {});
-  });
-});
+app.use(
+  createDownloadRouter({
+    devices,
+    send,
+    stateOf,
+  })
+);
 
 // manutenzione: scadenza dei file, dispositivi scollegati, contatori, ping per le connessioni SSE
 createCleanup({
