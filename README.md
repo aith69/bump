@@ -87,17 +87,22 @@ The original application was implemented largely in a single `server.js`.
 The code is being separated gradually, while preserving the existing behavior after every step.
 
 Completed:
-
 1. Frontend moved into `public/`.
 2. CSS moved into `public/css/style.css`.
 3. Frontend JavaScript moved into `public/js/app.js`.
 4. QRCode library kept locally under `public/`.
-5. Server configuration extracted into `src/config.js`.
-6. In-memory application state extracted into `src/store/memory.js`.
-7. Rate limiting extracted into `src/services/rate-limit.js`.
-8. Pairing logic extracted into `src/services/pairing.js`.
+5. Frontend localization extracted into `public/js/i18n.js` and `public/locales/`.
+6. Server configuration extracted into `src/config.js`.
+7. In-memory application state extracted into `src/store/memory.js`.
+8. Rate limiting extracted into `src/services/rate-limit.js`.
+9. Pairing logic extracted into `src/services/pairing.js`.
+10. Cleanup / maintenance logic extracted into `src/services/cleanup.js`.
+11. SSE events route extracted into `src/routes/events.js`.
+12. File management route extracted into `src/routes/file.js`.
+13. Share-link route extracted into `src/routes/share.js`.
+14. Bump route extracted into `src/routes/bump.js`.
 
-The current `server.js` remains the composition point for the application and HTTP routes.
+The remaining HTTP routes are still being extracted incrementally from `server.js`.
 
 ## Important design principles
 
@@ -127,11 +132,8 @@ Bump is a personal, lightweight application. Do not introduce Redis, databases, 
 
 The next refactoring steps are expected to include:
 
-- extract cleanup / maintenance logic;
-- further separate HTTP routes from application services;
-- isolate upload handling;
 - isolate download handling;
-- isolate share-link handling;
+- isolate upload handling;
 - make `server.js` primarily an application composition/bootstrap file.
 
 The exact module boundaries should be decided incrementally rather than creating a large number of files at once.
@@ -225,6 +227,7 @@ When continuing development from this repository, first inspect:
 4. `src/config.js`;
 5. `src/store/memory.js`;
 6. `src/services/`.
+7. `src/routes/`.
 
 Do not assume that the roadmap has already been implemented. The repository state and Git history are authoritative.
 
