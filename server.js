@@ -7,6 +7,7 @@ const state = require('./src/store/memory');
 const { devices, hits } = state;
 const createPairing = require('./src/services/pairing');
 const createRateLimiter = require('./src/services/rate-limit');
+const createCleanup = require('./src/services/cleanup');
 const {
   PORT,
   HOST,
@@ -185,17 +186,14 @@ app.get('/download', (req, res) => {
 });
 
 // manutenzione: scadenza dei file, dispositivi scollegati, contatori, ping per le connessioni SSE
-setInterval(() => {
-  const now = Date.now();
-  for (const [id, d] of devices) {
-    if (d.pending && now - d.pending.ts > TTL) {
-      dropPending(d);
-      send(d, 'state', stateOf(d));
-    }
-    if (d.res) d.res.write(': ping\n\n');
-    else if (!d.pending && !d.uploading) devices.delete(id);
-  }
-  for (const [k, list] of hits) if (now - list[list.length - 1] > 10 * 60 * 1000) hits.delete(k);
-}, 25000);
+createCleanup({
+  devices,
+  hits,
+  ttl: TTL,
+  intervalMs: 25000,
+  stateOf,
+  dropPending,
+  send,
+});
 
 app.listen(PORT, HOST, () => console.log(`Bump attivo su ${HOST}:${PORT}`));
