@@ -13,6 +13,7 @@ const createFileRouter = require('./src/routes/file');
 const createBumpRouter = require('./src/routes/bump');
 const createDownloadRouter = require('./src/routes/download');
 const createShareRouter = require('./src/routes/share');
+const createUploadRouter = require('./src/routes/upload');
 const {
   PORT,
   HOST,
@@ -88,47 +89,18 @@ app.use(
   })
 );
 
-// upload in streaming (niente memoria) con limite di dimensione
-app.post('/upload', (req, res) => {
-  const d = devices.get(String(req.query.id));
-  if (!d) return res.sendStatus(404);
-  if (d.pending || d.uploading) return res.sendStatus(409);
-  if (limited('upload', req.ip, 20, 10 * 60 * 1000)) return res.sendStatus(429);
-
-  const active = [...devices.values()].filter((x) => x.pending || x.uploading);
-  if (active.length >= MAX_FILES || active.filter((x) => x.ip === req.ip).length >= MAX_FILES_PER_IP) {
-    return res.sendStatus(503);
-  }
-  if (Number(req.headers['content-length']) > MAX_BYTES) {
-    res.set('Connection', 'close');
-    return res.sendStatus(413);
-  }
-
-  d.ip = req.ip;
-  const name = path.basename(String(req.query.name || 'file'));
-  const file = path.join(DIR, crypto.randomUUID());
-
-  let size = 0;
-  const limiter = new Transform({
-    transform(chunk, _enc, cb) {
-      size += chunk.length;
-      cb(size > MAX_BYTES ? new Error('troppo grande') : null, chunk);
-    },
-  });
-
-  d.uploading = true;
-  pipeline(req, limiter, fs.createWriteStream(file), (err) => {
-    d.uploading = false;
-    if (err) {
-      fs.unlink(file, () => {});
-      if (res.writable && !res.headersSent) res.sendStatus(500);
-      return;
-    }
-    d.pending = { name, file, ts: Date.now(), token: null, tokenExp: 0 };
-    send(d, 'state', stateOf(d));
-    res.sendStatus(200);
-  });
-});
+app.use(
+  createUploadRouter({
+    devices,
+    limited,
+    maxBytes: MAX_BYTES,
+    maxFiles: MAX_FILES,
+    maxFilesPerIp: MAX_FILES_PER_IP,
+    dir: DIR,
+    send,
+    stateOf,
+  })
+);
 
 // Bump. Ogni bump registra "chi" (dispositivo) e "come" (tasto oppure movimento), poi dopo SETTLE ms
 // si valuta la situazione. L'abbinamento parte SOLO se negli ultimi istanti hanno colpito esattamente due
