@@ -10,6 +10,7 @@ const createRateLimiter = require('./src/services/rate-limit');
 const createCleanup = require('./src/services/cleanup');
 const createEventsRouter = require('./src/routes/events');
 const createFileRouter = require('./src/routes/file');
+const createShareRouter = require('./src/routes/share');
 const {
   PORT,
   HOST,
@@ -77,6 +78,13 @@ app.use(
     stateOf,
   })
 );
+app.use(
+  createShareRouter({
+    devices,
+    limited,
+    shareTtl: SHARE_TTL,
+  })
+);
 
 // upload in streaming (niente memoria) con limite di dimensione
 app.post('/upload', (req, res) => {
@@ -118,21 +126,6 @@ app.post('/upload', (req, res) => {
     send(d, 'state', stateOf(d));
     res.sendStatus(200);
   });
-});
-
-
-// genera un link di download monouso per il proprio file in attesa, da mostrare come QR
-// (alternativa al bump, per quando l'accelerometro non è disponibile o non funziona)
-app.post('/share', (req, res) => {
-  const d = devices.get(String(req.query.id));
-  if (!d) return res.sendStatus(404);
-  if (!d.pending) return res.sendStatus(404);
-  if (limited('share', req.ip, 30, 10 * 60 * 1000)) return res.sendStatus(429);
-
-  const token = crypto.randomBytes(16).toString('hex');
-  d.pending.token = token;
-  d.pending.tokenExp = Date.now() + SHARE_TTL;
-  res.json({ url: `/download?t=${token}` });
 });
 
 // Bump. Ogni bump registra "chi" (dispositivo) e "come" (tasto oppure movimento), poi dopo SETTLE ms
