@@ -1,8 +1,6 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
-const { pipeline, Transform } = require('stream');
 const state = require('./src/store/memory');
 const { devices, hits } = state;
 const createPairing = require('./src/services/pairing');
