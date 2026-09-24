@@ -10,6 +10,7 @@ const createRateLimiter = require('./src/services/rate-limit');
 const createCleanup = require('./src/services/cleanup');
 const createEventsRouter = require('./src/routes/events');
 const createFileRouter = require('./src/routes/file');
+const createBumpRouter = require('./src/routes/bump');
 const createShareRouter = require('./src/routes/share');
 const {
   PORT,
@@ -133,17 +134,13 @@ app.post('/upload', (req, res) => {
 // dispositivi: uno con la barra spaziatrice ("key") e uno con l'accelerometro ("motion"), a meno di
 // PAIR_WINDOW ms di distanza, e uno solo dei due ha un file. Se i dispositivi coinvolti sono di più
 // l'abbinamento è ambiguo e non parte nulla (si riprova).
-app.post('/bump', (req, res) => {
-  const id = String(req.query.id);
-  const type = String(req.query.type);
-  if (!devices.has(id)) return res.sendStatus(404);
-  if (type !== 'key' && type !== 'motion') return res.sendStatus(400);
-  if (limited('bump', req.ip, 12, 60 * 1000)) return res.sendStatus(429);
-  res.sendStatus(200);
-
-  pairing.record(id, type);
-
-});
+app.use(
+  createBumpRouter({
+    devices,
+    limited,
+    pairing,
+  })
+);
 
 // alcuni browser sondano l'URL con HEAD: non deve consumare il file
 app.head('/download', (req, res) => res.sendStatus(200));
