@@ -3,6 +3,10 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { pipeline, Transform } = require('stream');
+const state = require('./src/store/memory');
+const { devices, hits } = state;
+const createRateLimiter = require('./src/services/rate-limit');
+const limited = createRateLimiter(hits);
 
 const {
   PORT,
@@ -24,9 +28,6 @@ fs.rmSync(DIR, { recursive: true, force: true });
 fs.mkdirSync(DIR);
 
 const ID_RE = /^[0-9a-f]{32}$/;
-const devices = new Map();   // id -> { id, res, ip, pending, uploading }   (solo in memoria)
-let bumps = [];              // bump recenti: { id, type, t }
-const hits = new Map();      // "tipo:ip" -> [timestamp...]  (limiti di frequenza)
 
 const app = express();
 app.disable('x-powered-by');
@@ -34,16 +35,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // dietro nginx serve leggere l'IP reale da X-Forwarded-For; TRUST_PROXY=true per fidarsi di qualsiasi proxy
 const tp = process.env.TRUST_PROXY;
 app.set('trust proxy', tp === 'true' ? true : tp || 'loopback, uniquelocal');
-
-function limited(kind, ip, max, windowMs) {
-  const key = `${kind}:${ip}`;
-  const now = Date.now();
-  const list = (hits.get(key) || []).filter((t) => now - t < windowMs);
-  const over = list.length >= max;
-  if (!over) list.push(now);
-  hits.set(key, list);
-  return over;
-}
 
 const stateOf = (d) => ({ pending: d.pending && { name: d.pending.name } });
 
@@ -161,20 +152,20 @@ app.post('/bump', (req, res) => {
   res.sendStatus(200);
 
   const now = Date.now();
-  bumps = bumps.filter((b) => now - b.t <= LOOKBACK && b.id !== id);
-  bumps.push({ id, type, t: now });
+  state.bumps = state.bumps.filter((b) => now - b.t <= LOOKBACK && b.id !== id);
+  state.bumps.push({ id, type, t: now });
   setTimeout(evaluate, SETTLE);
 });
 
 function evaluate() {
   const now = Date.now();
 
-  bumps = bumps.filter((b) => now - b.t <= LOOKBACK);
+  state.bumps = state.bumps.filter((b) => now - b.t <= LOOKBACK);
 
   // Servono esattamente due bump
-  if (bumps.length !== 2) return;
+  if (state.bumps.length !== 2) return;
 
-  const [aBump, bBump] = bumps;
+  const [aBump, bBump] = state.bumps;
 
   // Devono provenire da due dispositivi diversi
   if (aBump.id === bBump.id) return;
@@ -211,7 +202,7 @@ function evaluate() {
   sender.pending.token = token;
   sender.pending.tokenExp = now + TOKEN_TTL;
 
-  bumps = [];
+  state.bumps = [];
 
   send(receiver, 'download', {
     url: `/download?t=${token}`
