@@ -43,8 +43,13 @@ bump/
 ├── .gitignore
 ├── README.md
 ├── src/
-│   ├── config.js
+│   ├── routes/
+│   │   ├── events.js
+│   │   ├── file.js
+│   │   ├── share.js
+│   │   └── bump.js
 │   ├── services/
+│   │   ├── cleanup.js
 │   │   ├── rate-limit.js
 │   │   └── pairing.js
 │   └── store/
@@ -54,8 +59,28 @@ bump/
     ├── qrcode.min.js
     ├── css/
     │   └── style.css
-    └── js/
-        └── app.js
+    ├── js/
+    │   ├── app.js
+    │   └── i18n.js
+    └── locales/
+        ├── ar.json
+        ├── de.json
+        ├── en.json
+        ├── es.json
+        ├── fr.json
+        ├── hi.json
+        ├── it.json
+        ├── ja.json
+        ├── ko.json
+        ├── nl.json
+        ├── no.json
+        ├── pl.json
+        ├── pt.json
+        ├── ru.json
+        ├── sv.json
+        ├── tr.json
+        ├── uk.json
+        └── zh.json
 ```
 
 Runtime temporary files are stored in `tmp/` and are excluded from Git.
