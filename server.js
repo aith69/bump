@@ -31,6 +31,13 @@ const {
   SHARE_TTL,
 } = require("./src/config");
 const limited = createRateLimiter(hits);
+
+const deviceService = createDeviceService();
+const { stateOf, dropPending } = deviceService;
+
+const sse = createSse();
+const { send } = sse;
+
 const pairing = createPairing({
   state,
   devices,
@@ -56,12 +63,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // dietro nginx serve leggere l'IP reale da X-Forwarded-For; TRUST_PROXY=true per fidarsi di qualsiasi proxy
 const tp = process.env.TRUST_PROXY;
 app.set('trust proxy', tp === 'true' ? true : tp || 'loopback, uniquelocal');
-
-const deviceService = createDeviceService();
-const { stateOf, dropPending } = deviceService;
-
-const sse = createSse();
-const { send } = sse;
 
 app.use(
   createEventsRouter({
