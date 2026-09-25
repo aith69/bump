@@ -51,10 +51,15 @@ function createUploadRouter({
     const limiter = new Transform({
       transform(chunk, _enc, cb) {
         size += chunk.length;
-        cb(
-          size > maxBytes ? new Error('troppo grande') : null,
-          chunk
-        );
+
+        if (size > maxBytes) {
+          const err = new Error('troppo grande');
+          err.code = 'LIMIT_FILE_SIZE';
+          cb(err);
+          return;
+        }
+
+        cb(null, chunk);
       },
     });
 
@@ -71,7 +76,10 @@ function createUploadRouter({
           fs.unlink(file, () => {});
 
           if (res.writable && !res.headersSent) {
-            res.sendStatus(500);
+            res.set('Connection', 'close');
+            res.sendStatus(
+              err.code === 'LIMIT_FILE_SIZE' ? 413 : 500
+            );
           }
 
           return;

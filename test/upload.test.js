@@ -345,7 +345,7 @@ test('upload: upload valido -> pending + 200 + state', async () => {
   await fs.promises.rm(dir, { recursive: true, force: true });
 });
 
-test('upload: body oltre limite -> errore e file temporaneo rimosso', async () => {
+test('upload: body oltre limite -> 413 e file temporaneo rimosso', async () => {
   const dir = await fs.promises.mkdtemp(
     path.join(os.tmpdir(), 'bump-upload-')
   );
@@ -385,7 +385,8 @@ test('upload: body oltre limite -> errore e file temporaneo rimosso', async () =
   const files = await fs.promises.readdir(dir);
   assert.deepEqual(files, []);
 
-  assert.equal(res.statusCode, 500);
+  assert.equal(res.statusCode, 413);
+  assert.equal(res.headers.Connection, 'close');
 
   await fs.promises.rm(dir, { recursive: true, force: true });
 });
