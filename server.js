@@ -6,6 +6,7 @@ const { devices, hits } = state;
 const createPairing = require('./src/services/pairing');
 const createRateLimiter = require('./src/services/rate-limit');
 const createCleanup = require('./src/services/cleanup');
+const createDeviceService = require('./src/services/device');
 const createEventsRouter = require('./src/routes/events');
 const createFileRouter = require('./src/routes/file');
 const createBumpRouter = require('./src/routes/bump');
@@ -55,15 +56,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 const tp = process.env.TRUST_PROXY;
 app.set('trust proxy', tp === 'true' ? true : tp || 'loopback, uniquelocal');
 
-const stateOf = (d) => ({ pending: d.pending && { name: d.pending.name } });
+const deviceService = createDeviceService();
+const { stateOf, dropPending } = deviceService;
 
 function send(d, event, data) {
   if (d.res) d.res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
-}
-
-function dropPending(d) {
-  if (d.pending) fs.unlink(d.pending.file, () => {});
-  d.pending = null;
 }
 
 app.use(
