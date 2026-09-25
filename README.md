@@ -42,7 +42,7 @@ Bump server
    | HTTP / SSE
    v
 Browser B
-````
+```
 
 The server currently handles:
 
@@ -217,23 +217,31 @@ A future developer or LLM must not interpret an item below as already implemente
 
 ## Phase 0 — Stabilization
 
-**Current phase.**
+**Completed.**
 
-Goals:
+The stabilization phase has been completed and validated on the development branch.
 
-* complete the current production validation;
-* maintain the README as project memory;
-* establish a known stable Git baseline;
-* create a release/tag for the current stable state;
-* perform basic regression testing.
+Completed goals:
 
-### Current baseline
+* README maintained as project memory;
+* known stable Git baseline established;
+* stable baseline tagged as `v0.1.0`;
+* automated regression tests implemented;
+* full automated test suite passing: **44/44**;
+* manual end-to-end validation completed on the test deployment;
+* upload, download, sharing, pairing, cleanup, rate limiting and localization manually validated.
+
+### Stable baseline
 
 ```text
-Stable commit: 4665e30
+Stable commit: b4f534f
+Stable tag: v0.1.0
 Transfer: server-side HTTP
 WebRTC: not implemented
+Automated tests: 44/44 passing
 ```
+
+The `main` branch remains at the `v0.1.0` baseline. Further development continues on `develop`.
 
 ---
 
@@ -457,11 +465,12 @@ Avoid changing production directly during development.
 
 # Current status
 
-At the current stable baseline:
+At the current development state:
 
 * the development branch is `develop`;
 * the production branch is `main`;
-* both branches point to the same stable commit after the latest promotion;
+* `main` remains at the stable `v0.1.0` baseline;
+* `develop` contains the ongoing development work after `v0.1.0`;
 * the development/test instance is working;
 * the production instance is working;
 * the frontend is localized;
@@ -469,7 +478,10 @@ At the current stable baseline:
 * server-side HTTP file transfer is the active transfer mechanism;
 * WebRTC/P2P transfer has **not** been implemented;
 * automatic WebRTC fallback has **not** been implemented;
-* automated tests have **not** yet been implemented;
+* automated regression tests are implemented;
+* the current automated test suite passes **44/44 tests**;
 * CI has **not** yet been implemented.
 
-The next planned milestone is **Phase 0 — Stabilization**.
+**Phase 0 — Stabilization is completed.**
+
+The next planned milestone is **Phase 1 — Architecture / cleanup**.
