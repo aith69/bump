@@ -1,0 +1,18 @@
+{
+  "upload": "Fájl feltöltése",
+  "removeFile": "Fájl eltávolítása",
+  "createDownloadQr": "Letöltési QR-kód létrehozása",
+  "shareInstruction": "Olvassa be ezt a kódot a fájl letöltéséhez",
+  "close": "Bezárás",
+  "touchHint": "Töltsön fel egy fájlt, majd érintse ezt a telefont a másik eszközhöz.",
+  "desktopHint": "Nyomja meg a szóközt, amíg a másik eszköz közelít.",
+  "uploading": "Feltöltés…",
+  "sent": "Elküldve ✓",
+  "received": "Fogadva ✓",
+  "maxFileSize": "Legfeljebb 50 MB",
+  "tooManyAttempts": "Túl sok kísérlet, várjon",
+  "serverBusy": "A szerver foglalt, próbálja újra",
+  "fileAlreadyWaiting": "Már vár egy fájl",
+  "failed": "Sikertelen",
+  "shareValidFor": "Érvényes: {time}"
+}

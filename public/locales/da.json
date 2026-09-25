@@ -1,0 +1,18 @@
+{
+  "upload": "Upload fil",
+  "removeFile": "Fjern fil",
+  "createDownloadQr": "Opret download-QR",
+  "shareInstruction": "Scan denne kode for at downloade filen",
+  "close": "Luk",
+  "touchHint": "Upload en fil, og stød derefter denne telefon mod den anden enhed.",
+  "desktopHint": "Tryk på mellemrumstasten, mens den anden enhed nærmer sig.",
+  "uploading": "Uploader…",
+  "sent": "Sendt ✓",
+  "received": "Modtaget ✓",
+  "maxFileSize": "Maks. 50 MB",
+  "tooManyAttempts": "For mange forsøg, vent",
+  "serverBusy": "Serveren er optaget, prøv igen",
+  "fileAlreadyWaiting": "En fil venter allerede",
+  "failed": "Mislykkedes",
+  "shareValidFor": "Gyldig i {time}"
+}

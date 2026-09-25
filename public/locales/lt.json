@@ -1,0 +1,18 @@
+{
+  "upload": "Įkelti failą",
+  "removeFile": "Pašalinti failą",
+  "createDownloadQr": "Sukurti atsisiuntimo QR kodą",
+  "shareInstruction": "Nuskaitykite šį kodą, kad atsisiųstumėte failą",
+  "close": "Uždaryti",
+  "touchHint": "Įkelkite failą, tada priglauskite šį telefoną prie kito įrenginio.",
+  "desktopHint": "Paspauskite tarpo klavišą, kai kitas įrenginys artėja.",
+  "uploading": "Įkeliama…",
+  "sent": "Išsiųsta ✓",
+  "received": "Gauta ✓",
+  "maxFileSize": "Daugiausia 50 MB",
+  "tooManyAttempts": "Per daug bandymų, palaukite",
+  "serverBusy": "Serveris užimtas, bandykite dar kartą",
+  "fileAlreadyWaiting": "Failas jau laukia",
+  "failed": "Nepavyko",
+  "shareValidFor": "Galioja {time}"
+}

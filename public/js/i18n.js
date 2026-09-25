@@ -1,19 +1,32 @@
 (() => {
-  const supported = [
-    'it', 'en', 'de', 'es', 'fr', 'pt',
-    'nl', 'pl', 'sv', 'no', 'tr',
-    'ru', 'uk', 'ar', 'hi', 'ja', 'ko', 'zh'
-  ];
-  const fallback = 'it';
+  async function loadConfig() {
+    const response = await fetch('/locales/config.json', {
+      cache: 'no-cache',
+    });
 
-  function getLocale() {
-    const languages = navigator.languages?.length
-      ? navigator.languages
-      : [navigator.language];
+    if (!response.ok) {
+      throw new Error('Unable to load locale configuration');
+    }
+
+    return response.json();
+  }
+
+  function getLocale(languages, available, fallback) {
+    const normalized = new Map(
+      available.map((locale) => [locale.toLowerCase(), locale])
+    );
 
     for (const language of languages) {
-      const locale = language.toLowerCase().split('-')[0];
-      if (supported.includes(locale)) return locale;
+      const value = String(language).toLowerCase();
+
+      // Prima prova la lingua completa, ad esempio pt-br o zh-tw.
+      const exact = normalized.get(value);
+      if (exact) return exact;
+
+      // Poi prova la lingua base, ad esempio en-us -> en.
+      const base = value.split('-')[0];
+      const baseLocale = normalized.get(base);
+      if (baseLocale) return baseLocale;
     }
 
     return fallback;
@@ -45,14 +58,39 @@
   }
 
   async function init() {
-    let locale = getLocale();
+    const config = await loadConfig();
+
+    if (!config.fallback) {
+      throw new Error('Locale configuration: fallback mancante');
+    }
+
+    if (!Array.isArray(config.available) || config.available.length === 0) {
+      throw new Error('Locale configuration: available mancante o vuoto');
+    }
+
+    if (!config.available.includes(config.fallback)) {
+      throw new Error(
+        `Locale configuration: fallback "${config.fallback}" non presente in available`
+      );
+    }
+
+    const languages = navigator.languages?.length
+      ? navigator.languages
+      : [navigator.language];
+
+    let locale = getLocale(
+      languages,
+      config.available,
+      config.fallback
+    );
+
     let strings;
 
     try {
       strings = await loadLocale(locale);
     } catch {
-      locale = fallback;
-      strings = await loadLocale(fallback);
+      locale = config.fallback;
+      strings = await loadLocale(config.fallback);
     }
 
     document.documentElement.lang = locale;

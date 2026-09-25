@@ -1,0 +1,18 @@
+{
+  "upload": "Lataa tiedosto",
+  "removeFile": "Poista tiedosto",
+  "createDownloadQr": "Luo lataus-QR-koodi",
+  "shareInstruction": "Skannaa tämä koodi ladataksesi tiedoston",
+  "close": "Sulje",
+  "touchHint": "Lataa tiedosto ja kosketa sitten tätä puhelinta toiseen laitteeseen.",
+  "desktopHint": "Paina välilyöntiä, kun toinen laite lähestyy.",
+  "uploading": "Ladataan…",
+  "sent": "Lähetetty ✓",
+  "received": "Vastaanotettu ✓",
+  "maxFileSize": "Enintään 50 MB",
+  "tooManyAttempts": "Liian monta yritystä, odota",
+  "serverBusy": "Palvelin varattu, yritä uudelleen",
+  "fileAlreadyWaiting": "Tiedosto odottaa jo",
+  "failed": "Epäonnistui",
+  "shareValidFor": "Voimassa {time}"
+}

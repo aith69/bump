@@ -1,0 +1,18 @@
+{
+  "upload": "Kargatu fitxategia",
+  "removeFile": "Kendu fitxategia",
+  "createDownloadQr": "Sortu deskarga QR kodea",
+  "shareInstruction": "Eskaneatu kode hau fitxategia deskargatzeko",
+  "close": "Itxi",
+  "touchHint": "Kargatu fitxategi bat, gero ukitu telefono hau beste gailuarekin.",
+  "desktopHint": "Sakatu zuriune-barra beste gailua hurbiltzen denean.",
+  "uploading": "Kargatzen…",
+  "sent": "Bidalita ✓",
+  "received": "Jasota ✓",
+  "maxFileSize": "Gehienez 50 MB",
+  "tooManyAttempts": "Saiakera gehiegi, itxaron",
+  "serverBusy": "Zerbitzaria lanpetuta, saiatu berriro",
+  "fileAlreadyWaiting": "Fitxategi bat dagoeneko zain",
+  "failed": "Huts egin du",
+  "shareValidFor": "{time}-rako balio du"
+}

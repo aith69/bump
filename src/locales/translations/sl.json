@@ -1,0 +1,18 @@
+{
+  "upload": "Naloži datoteko",
+  "removeFile": "Odstrani datoteko",
+  "createDownloadQr": "Ustvari QR kodo za prenos",
+  "shareInstruction": "Skeniraj to kodo za prenos datoteke",
+  "close": "Zapri",
+  "touchHint": "Naloži datoteko, nato približaj ta telefon drugi napravi.",
+  "desktopHint": "Pritisni preslednico, ko se druga naprava približa.",
+  "uploading": "Nalaganje…",
+  "sent": "Poslano ✓",
+  "received": "Prejeto ✓",
+  "maxFileSize": "Največ 50 MB",
+  "tooManyAttempts": "Preveč poskusov, počakaj",
+  "serverBusy": "Strežnik je zaseden, poskusi znova",
+  "fileAlreadyWaiting": "Datoteka že čaka",
+  "failed": "Neuspešno",
+  "shareValidFor": "Velja {time}"
+}

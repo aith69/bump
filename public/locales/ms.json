@@ -1,0 +1,18 @@
+{
+  "upload": "Muat naik fail",
+  "removeFile": "Buang fail",
+  "createDownloadQr": "Cipta kod QR muat turun",
+  "shareInstruction": "Imbas kod ini untuk memuat turun fail",
+  "close": "Tutup",
+  "touchHint": "Muat naik fail, kemudian ketuk telefon ini pada peranti lain.",
+  "desktopHint": "Tekan bar space semasa peranti lain mengetuk.",
+  "uploading": "Memuat naik…",
+  "sent": "Dihantar ✓",
+  "received": "Diterima ✓",
+  "maxFileSize": "Maksimum 50 MB",
+  "tooManyAttempts": "Terlalu banyak percubaan, sila tunggu",
+  "serverBusy": "Pelayan sibuk, cuba lagi",
+  "fileAlreadyWaiting": "Fail sudah menunggu",
+  "failed": "Gagal",
+  "shareValidFor": "Sah untuk {time}"
+}

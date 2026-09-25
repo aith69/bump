@@ -1,0 +1,18 @@
+{
+  "upload": "Ngarko skedar",
+  "removeFile": "Hiq skedarin",
+  "createDownloadQr": "Krijo kod QR për shkarkim",
+  "shareInstruction": "Skano këtë kod për të shkarkuar skedarin",
+  "close": "Mbyll",
+  "touchHint": "Ngarko një skedar, pastaj trokit këtë telefon kundër pajisjes tjetër.",
+  "desktopHint": "Shtyp shiritin e hapësirës ndërsa pajisja tjetër troket.",
+  "uploading": "Po ngarkohet…",
+  "sent": "Dërguar ✓",
+  "received": "Marrë ✓",
+  "maxFileSize": "Maksimumi 50 MB",
+  "tooManyAttempts": "Shumë përpjekje, ju lutem prisni",
+  "serverBusy": "Serveri i zënë, provo përsëri",
+  "fileAlreadyWaiting": "Një skedar është tashmë në pritje",
+  "failed": "Dështoi",
+  "shareValidFor": "I vlefshëm për {time}"
+}

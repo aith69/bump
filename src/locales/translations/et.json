@@ -1,0 +1,18 @@
+{
+  "upload": "Laadi fail üles",
+  "removeFile": "Eemalda fail",
+  "createDownloadQr": "Loo allalaadimise QR-kood",
+  "shareInstruction": "Skaneeri see kood faili allalaadimiseks",
+  "close": "Sulge",
+  "touchHint": "Laadi fail üles, seejärel puuduta selle telefoniga teist seadet.",
+  "desktopHint": "Vajuta tühikuklahvi, kui teine seade läheneb.",
+  "uploading": "Üleslaadimine…",
+  "sent": "Saadetud ✓",
+  "received": "Vastu võetud ✓",
+  "maxFileSize": "Kuni 50 MB",
+  "tooManyAttempts": "Liiga palju katseid, oota",
+  "serverBusy": "Server on hõivatud, proovi uuesti",
+  "fileAlreadyWaiting": "Fail juba ootab",
+  "failed": "Ebaõnnestus",
+  "shareValidFor": "Kehtib {time}"
+}

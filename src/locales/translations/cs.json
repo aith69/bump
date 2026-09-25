@@ -1,0 +1,18 @@
+{
+  "upload": "Nahrát soubor",
+  "removeFile": "Odebrat soubor",
+  "createDownloadQr": "Vytvořit QR kód pro stažení",
+  "shareInstruction": "Naskenujte tento kód pro stažení souboru",
+  "close": "Zavřít",
+  "touchHint": "Nahrajte soubor a poté přiložte tento telefon k druhému zařízení.",
+  "desktopHint": "Stiskněte mezerník, když se druhé zařízení přiblíží.",
+  "uploading": "Nahrávání…",
+  "sent": "Odesláno ✓",
+  "received": "Přijato ✓",
+  "maxFileSize": "Maximálně 50 MB",
+  "tooManyAttempts": "Příliš mnoho pokusů, počkejte",
+  "serverBusy": "Server je zaneprázdněn, zkuste to znovu",
+  "fileAlreadyWaiting": "Soubor již čeká",
+  "failed": "Selhalo",
+  "shareValidFor": "Platné {time}"
+}

@@ -1,0 +1,18 @@
+{
+  "upload": "Tải tệp lên",
+  "removeFile": "Xóa tệp",
+  "createDownloadQr": "Tạo mã QR tải xuống",
+  "shareInstruction": "Quét mã này để tải xuống tệp",
+  "close": "Đóng",
+  "touchHint": "Tải tệp lên, sau đó chạm điện thoại này vào thiết bị kia.",
+  "desktopHint": "Nhấn phím cách khi thiết bị kia chạm.",
+  "uploading": "Đang tải lên…",
+  "sent": "Đã gửi ✓",
+  "received": "Đã nhận ✓",
+  "maxFileSize": "Tối đa 50 MB",
+  "tooManyAttempts": "Quá nhiều lần thử, vui lòng đợi",
+  "serverBusy": "Máy chủ bận, thử lại",
+  "fileAlreadyWaiting": "Đã có tệp đang chờ",
+  "failed": "Thất bại",
+  "shareValidFor": "Có hiệu lực {time}"
+}

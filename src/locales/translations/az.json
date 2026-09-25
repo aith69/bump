@@ -1,0 +1,18 @@
+{
+  "upload": "Fayl yüklə",
+  "removeFile": "Faylı sil",
+  "createDownloadQr": "Yükləmə QR kodu yarat",
+  "shareInstruction": "Faylı yükləmək üçün bu kodu skan edin",
+  "close": "Bağla",
+  "touchHint": "Fayl yükləyin, sonra bu telefonu digər cihaza toxundurun.",
+  "desktopHint": "Digər cihaz toxundurarkən boşluq düyməsini basın.",
+  "uploading": "Yüklənir…",
+  "sent": "Göndərildi ✓",
+  "received": "Alındı ✓",
+  "maxFileSize": "Maksimum 50 MB",
+  "tooManyAttempts": "Çox cəhd, gözləyin",
+  "serverBusy": "Server məşğuldur, yenidən cəhd edin",
+  "fileAlreadyWaiting": "Artıq bir fayl gözləyir",
+  "failed": "Uğursuz",
+  "shareValidFor": "{time} üçün etibarlıdır"
+}

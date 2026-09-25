@@ -1,0 +1,18 @@
+{
+  "upload": "上傳檔案",
+  "removeFile": "移除檔案",
+  "createDownloadQr": "建立下載 QR 碼",
+  "shareInstruction": "掃描此 QR 碼以下載檔案",
+  "close": "關閉",
+  "touchHint": "上傳檔案，然後將此手機靠近另一台裝置。",
+  "desktopHint": "當另一台裝置靠近時按下空白鍵。",
+  "uploading": "上傳中…",
+  "sent": "已傳送 ✓",
+  "received": "已接收 ✓",
+  "maxFileSize": "最大 50 MB",
+  "tooManyAttempts": "嘗試次數過多，請稍候",
+  "serverBusy": "伺服器忙碌，請重試",
+  "fileAlreadyWaiting": "已有檔案在等待",
+  "failed": "失敗",
+  "shareValidFor": "有效期 {time}"
+}

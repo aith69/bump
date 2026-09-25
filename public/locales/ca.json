@@ -1,0 +1,18 @@
+{
+  "upload": "Puja un fitxer",
+  "removeFile": "Elimina el fitxer",
+  "createDownloadQr": "Crea un codi QR de descàrrega",
+  "shareInstruction": "Escaneja aquest codi per descarregar el fitxer",
+  "close": "Tanca",
+  "touchHint": "Puja un fitxer i després apropa aquest telèfon a l'altre dispositiu.",
+  "desktopHint": "Prem la barra espaiadora mentre l'altre dispositiu s'apropa.",
+  "uploading": "Pujant…",
+  "sent": "Enviat ✓",
+  "received": "Rebut ✓",
+  "maxFileSize": "Màxim 50 MB",
+  "tooManyAttempts": "Massa intents, espera",
+  "serverBusy": "Servidor ocupat, torna-ho a provar",
+  "fileAlreadyWaiting": "Ja hi ha un fitxer esperant",
+  "failed": "Ha fallat",
+  "shareValidFor": "Vàlid durant {time}"
+}

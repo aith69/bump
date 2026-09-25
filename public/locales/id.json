@@ -1,0 +1,18 @@
+{
+  "upload": "Unggah file",
+  "removeFile": "Hapus file",
+  "createDownloadQr": "Buat kode QR unduhan",
+  "shareInstruction": "Pindai kode ini untuk mengunduh file",
+  "close": "Tutup",
+  "touchHint": "Unggah file, lalu sentuhkan ponsel ini ke perangkat lain.",
+  "desktopHint": "Tekan spasi saat perangkat lain mendekat.",
+  "uploading": "Mengunggah…",
+  "sent": "Terkirim ✓",
+  "received": "Diterima ✓",
+  "maxFileSize": "Maksimal 50 MB",
+  "tooManyAttempts": "Terlalu banyak percobaan, tunggu",
+  "serverBusy": "Server sibuk, coba lagi",
+  "fileAlreadyWaiting": "Sudah ada file menunggu",
+  "failed": "Gagal",
+  "shareValidFor": "Berlaku {time}"
+}

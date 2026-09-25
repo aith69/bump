@@ -1,0 +1,18 @@
+{
+  "upload": "Carregar ficheiro",
+  "removeFile": "Remover ficheiro",
+  "createDownloadQr": "Criar QR code de transferência",
+  "shareInstruction": "Digitalize este código para transferir o ficheiro",
+  "close": "Fechar",
+  "touchHint": "Carregue um ficheiro e aproxime este telefone do outro dispositivo.",
+  "desktopHint": "Prima a barra de espaços enquanto o outro dispositivo se aproxima.",
+  "uploading": "A carregar…",
+  "sent": "Enviado ✓",
+  "received": "Recebido ✓",
+  "maxFileSize": "Máximo 50 MB",
+  "tooManyAttempts": "Demasiadas tentativas, aguarde",
+  "serverBusy": "Servidor ocupado, tente novamente",
+  "fileAlreadyWaiting": "Já existe um ficheiro em espera",
+  "failed": "Falhou",
+  "shareValidFor": "Válido durante {time}"
+}

@@ -1,0 +1,18 @@
+{
+  "upload": "Subir ficheiro",
+  "removeFile": "Eliminar ficheiro",
+  "createDownloadQr": "Crear código QR de descarga",
+  "shareInstruction": "Escanea este código para descargar o ficheiro",
+  "close": "Pechar",
+  "touchHint": "Sube un ficheiro e despois achega este teléfono ao outro dispositivo.",
+  "desktopHint": "Preme a barra espazadora mentres o outro dispositivo se achega.",
+  "uploading": "Subindo…",
+  "sent": "Enviado ✓",
+  "received": "Recibido ✓",
+  "maxFileSize": "Máximo 50 MB",
+  "tooManyAttempts": "Demasiados intentos, espera",
+  "serverBusy": "Servidor ocupado, téntao de novo",
+  "fileAlreadyWaiting": "Xa hai un ficheiro esperando",
+  "failed": "Fallou",
+  "shareValidFor": "Válido durante {time}"
+}

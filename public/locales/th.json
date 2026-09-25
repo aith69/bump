@@ -1,0 +1,18 @@
+{
+  "upload": "อัปโหลดไฟล์",
+  "removeFile": "ลบไฟล์",
+  "createDownloadQr": "สร้าง QR สำหรับดาวน์โหลด",
+  "shareInstruction": "สแกนรหัสนี้เพื่อดาวน์โหลดไฟล์",
+  "close": "ปิด",
+  "touchHint": "อัปโหลดไฟล์ แล้วแตะโทรศัพท์นี้กับอุปกรณ์อื่น",
+  "desktopHint": "กดแป้นเว้นวรรคขณะที่อุปกรณ์อื่นแตะ",
+  "uploading": "กำลังอัปโหลด…",
+  "sent": "ส่งแล้ว ✓",
+  "received": "ได้รับแล้ว ✓",
+  "maxFileSize": "สูงสุด 50 MB",
+  "tooManyAttempts": "พยายามหลายครั้งเกินไป โปรดรอ",
+  "serverBusy": "เซิร์ฟเวอร์ไม่ว่าง ลองอีกครั้ง",
+  "fileAlreadyWaiting": "มีไฟล์รออยู่แล้ว",
+  "failed": "ล้มเหลว",
+  "shareValidFor": "ใช้ได้ {time}"
+}

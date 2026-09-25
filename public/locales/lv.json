@@ -1,0 +1,18 @@
+{
+  "upload": "Augšupielādēt failu",
+  "removeFile": "Noņemt failu",
+  "createDownloadQr": "Izveidot lejupielādes QR kodu",
+  "shareInstruction": "Skenējiet šo kodu, lai lejupielādētu failu",
+  "close": "Aizvērt",
+  "touchHint": "Augšupielādējiet failu, pēc tam pieskarieties šim telefonam pie otras ierīces.",
+  "desktopHint": "Nospiediet atstarpes taustiņu, kamēr otra ierīce tuvojas.",
+  "uploading": "Augšupielāde…",
+  "sent": "Nosūtīts ✓",
+  "received": "Saņemts ✓",
+  "maxFileSize": "Maksimāli 50 MB",
+  "tooManyAttempts": "Pārāk daudz mēģinājumu, uzgaidiet",
+  "serverBusy": "Serveris aizņemts, mēģiniet vēlreiz",
+  "fileAlreadyWaiting": "Fails jau gaida",
+  "failed": "Neizdevās",
+  "shareValidFor": "Derīgs {time}"
+}

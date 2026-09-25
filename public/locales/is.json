@@ -1,0 +1,18 @@
+{
+  "upload": "Hlaða upp skrá",
+  "removeFile": "Fjarlægja skrá",
+  "createDownloadQr": "Búa til niðurhals QR kóða",
+  "shareInstruction": "Skannaðu þennan kóða til að hlaða niður skránni",
+  "close": "Loka",
+  "touchHint": "Hlaðu upp skrá, ýttu svo þessum síma við hinn tækið.",
+  "desktopHint": "Ýttu á bilstöngina meðan hinn tækið ýtir.",
+  "uploading": "Hleður upp…",
+  "sent": "Sent ✓",
+  "received": "Móttekið ✓",
+  "maxFileSize": "Að hámarki 50 MB",
+  "tooManyAttempts": "Of margar tilraunir, bíddu",
+  "serverBusy": "Þjónninn er upptekinn, reyndu aftur",
+  "fileAlreadyWaiting": "Skrá bíður þegar",
+  "failed": "Mistókst",
+  "shareValidFor": "Gildir í {time}"
+}

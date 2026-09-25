@@ -1,0 +1,18 @@
+{
+  "upload": "Last opp fil",
+  "removeFile": "Fjern fil",
+  "createDownloadQr": "Lag nedlastings-QR",
+  "shareInstruction": "Skann denne koden for å laste ned filen",
+  "close": "Lukk",
+  "touchHint": "Last opp en fil, og berør deretter denne telefonen mot den andre enheten.",
+  "desktopHint": "Trykk på mellomromstasten mens den andre enheten nærmer seg.",
+  "uploading": "Laster opp…",
+  "sent": "Sendt ✓",
+  "received": "Mottatt ✓",
+  "maxFileSize": "Maks 50 MB",
+  "tooManyAttempts": "For mange forsøk, vent",
+  "serverBusy": "Serveren er opptatt, prøv igjen",
+  "fileAlreadyWaiting": "En fil venter allerede",
+  "failed": "Mislyktes",
+  "shareValidFor": "Gyldig i {time}"
+}

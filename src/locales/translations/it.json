@@ -1,0 +1,18 @@
+{
+  "upload": "Carica file",
+  "removeFile": "Rimuovi il file",
+  "createDownloadQr": "Crea QR per il download",
+  "shareInstruction": "Fai scansionare questo codice per scaricare il file",
+  "close": "Chiudi",
+  "touchHint": "Carica un file, poi fai scontrare questo telefono con l'altro dispositivo.",
+  "desktopHint": "Premi la barra spaziatrice mentre l'altro dispositivo fa bump.",
+  "uploading": "Caricamento…",
+  "sent": "Inviato ✓",
+  "received": "Ricevuto ✓",
+  "maxFileSize": "Massimo 50 MB",
+  "tooManyAttempts": "Troppi tentativi, aspetta",
+  "serverBusy": "Server occupato, riprova",
+  "fileAlreadyWaiting": "C'è già un file in attesa",
+  "failed": "Non riuscito",
+  "shareValidFor": "Valido per {time}"
+}

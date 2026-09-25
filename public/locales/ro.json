@@ -1,0 +1,18 @@
+{
+  "upload": "Încarcă fișier",
+  "removeFile": "Elimină fișierul",
+  "createDownloadQr": "Creează cod QR de descărcare",
+  "shareInstruction": "Scanează acest cod pentru a descărca fișierul",
+  "close": "Închide",
+  "touchHint": "Încarcă un fișier, apoi apropie acest telefon de celălalt dispozitiv.",
+  "desktopHint": "Apasă bara de spațiu în timp ce celălalt dispozitiv se apropie.",
+  "uploading": "Se încarcă…",
+  "sent": "Trimis ✓",
+  "received": "Primit ✓",
+  "maxFileSize": "Maxim 50 MB",
+  "tooManyAttempts": "Prea multe încercări, așteaptă",
+  "serverBusy": "Server ocupat, încearcă din nou",
+  "fileAlreadyWaiting": "Un fișier este deja în așteptare",
+  "failed": "Eșuat",
+  "shareValidFor": "Valabil {time}"
+}

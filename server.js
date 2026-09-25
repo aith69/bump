@@ -12,6 +12,7 @@ const createBumpRouter = require('./src/routes/bump');
 const createDownloadRouter = require('./src/routes/download');
 const createShareRouter = require('./src/routes/share');
 const createUploadRouter = require('./src/routes/upload');
+const prepareLocales = require('./src/services/locales');
 const {
   PORT,
   HOST,
@@ -41,6 +42,9 @@ const pairing = createPairing({
 // all'avvio la cartella temporanea parte sempre vuota
 fs.rmSync(DIR, { recursive: true, force: true });
 fs.mkdirSync(DIR);
+
+// prepara i file delle traduzioni disponibili per il frontend
+prepareLocales();
 
 const ID_RE = /^[0-9a-f]{32}$/;
 

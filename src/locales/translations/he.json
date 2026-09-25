@@ -1,0 +1,18 @@
+{
+  "upload": "העלה קובץ",
+  "removeFile": "הסר קובץ",
+  "createDownloadQr": "צור קוד QR להורדה",
+  "shareInstruction": "סרוק קוד זה כדי להוריד את הקובץ",
+  "close": "סגור",
+  "touchHint": "העלה קובץ, ואז הצמד טלפון זה למכשיר האחר.",
+  "desktopHint": "לחץ על מקש הרווח כשהמכשיר האחר מתקרב.",
+  "uploading": "מעלה…",
+  "sent": "נשלח ✓",
+  "received": "התקבל ✓",
+  "maxFileSize": "מקסימום 50 MB",
+  "tooManyAttempts": "יותר מדי ניסיונות, המתן",
+  "serverBusy": "השרת עמוס, נסה שוב",
+  "fileAlreadyWaiting": "קובץ כבר ממתין",
+  "failed": "נכשל",
+  "shareValidFor": "בתוקף ל-{time}"
+}
