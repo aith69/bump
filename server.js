@@ -7,6 +7,7 @@ const createPairing = require('./src/services/pairing');
 const createRateLimiter = require('./src/services/rate-limit');
 const createCleanup = require('./src/services/cleanup');
 const createDeviceService = require('./src/services/device');
+const createSse = require('./src/services/sse');
 const createEventsRouter = require('./src/routes/events');
 const createFileRouter = require('./src/routes/file');
 const createBumpRouter = require('./src/routes/bump');
@@ -59,9 +60,8 @@ app.set('trust proxy', tp === 'true' ? true : tp || 'loopback, uniquelocal');
 const deviceService = createDeviceService();
 const { stateOf, dropPending } = deviceService;
 
-function send(d, event, data) {
-  if (d.res) d.res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
-}
+const sse = createSse();
+const { send } = sse;
 
 app.use(
   createEventsRouter({
