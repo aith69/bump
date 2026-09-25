@@ -1,34 +1,12 @@
 # Bump
 
-Bump is a self-hosted, lightweight file-transfer web application designed for quickly transferring files between nearby devices.
+Bump is a self-hosted, lightweight file-transfer web application designed to quickly transfer files between nearby devices.
 
-The project is intentionally simple and browser-based. A device opens Bump in a browser, selects a file, and can pair with another device using a physical "bump" interaction.
+The application is entirely browser-based. A device opens Bump in a browser, selects a file, and can pair with another device using a physical "bump" interaction.
 
 The current implementation transfers files through the Bump server.
 
-The long-term goal is to support direct peer-to-peer transfers through WebRTC when possible, while retaining the existing server-side transfer as an automatic fallback.
-
----
-
-## Current stable baseline
-
-This section describes the actual state of the repository, not future plans.
-
-- **Stable commit:** `4665e30`
-- **Production branch:** `main`
-- **Development branch:** `develop`
-- **Production worktree:** `/opt/bump`
-- **Development worktree:** `/opt/bump-test`
-- **Production service:** `bump.service`
-- **Development service:** `bump-test.service`
-- **Current transfer mechanism:** server-side HTTP transfer
-- **WebRTC/P2P:** not implemented
-
-The current version has been tested in the development environment and then deployed to production.
-
-**The repository state and Git history are authoritative if this README and the code ever disagree.**
-
----
+The long-term goal is to support direct peer-to-peer transfers through WebRTC while retaining the existing server-side transfer as a reliable fallback.
 
 ## Current architecture
 
@@ -44,9 +22,10 @@ Bump server
 Browser B
 ```
 
-The server currently handles:
+The Bump server currently handles:
 
-* device registration and Server-Sent Events (SSE);
+* device registration;
+* Server-Sent Events (SSE);
 * file uploads;
 * temporary file storage;
 * bump pairing;
@@ -54,13 +33,61 @@ The server currently handles:
 * server-side file downloads;
 * share links;
 * rate limiting;
-* cleanup of expired files and disconnected devices.
+* cleanup of expired files and disconnected devices;
+* frontend localization preparation.
 
 Application state is currently held in memory.
 
-Files are stored temporarily on disk and are removed when they expire, are consumed, or are explicitly deleted.
+Uploaded files are stored temporarily on disk and are removed when they expire or are consumed.
 
----
+## Current features
+
+### Device pairing
+
+Bump supports pairing between nearby devices using:
+
+* keyboard interaction on computers;
+* motion detection on compatible mobile devices.
+
+The pairing service validates the timing and type of bump events before creating a one-time download token.
+
+### File transfer
+
+The current transfer path is:
+
+```text
+Browser A
+    |
+    | upload
+    v
+Bump server
+    |
+    | one-time download URL
+    v
+Browser B
+```
+
+The server temporarily stores the uploaded file.
+
+### Share links
+
+Files can also be shared through temporary share links.
+
+### Localization
+
+The application includes a configurable localization system.
+
+The frontend uses `public/js/i18n.js` to load and apply translations from `public/locales/`.
+
+Translation sources are stored under:
+
+```text
+src/locales/
+```
+
+The available translations are prepared for the frontend when the server starts.
+
+The current configuration supports 53 languages, with English (`en`) as the fallback language.
 
 ## Repository structure
 
@@ -74,6 +101,7 @@ bump/
 │
 ├── src/
 │   ├── config.js
+│   │
 │   ├── routes/
 │   │   ├── bump.js
 │   │   ├── download.js
@@ -81,12 +109,21 @@ bump/
 │   │   ├── file.js
 │   │   ├── share.js
 │   │   └── upload.js
+│   │
 │   ├── services/
 │   │   ├── cleanup.js
+│   │   ├── device.js
+│   │   ├── locales.js
 │   │   ├── pairing.js
-│   │   └── rate-limit.js
-│   └── store/
-│       └── memory.js
+│   │   ├── rate-limit.js
+│   │   └── sse.js
+│   │
+│   ├── store/
+│   │   └── memory.js
+│   │
+│   └── locales/
+│       ├── config.json
+│       └── translations/
 │
 └── public/
     ├── index.html
@@ -97,29 +134,77 @@ bump/
     │   ├── app.js
     │   └── i18n.js
     └── locales/
-        ├── ar.json
-        ├── de.json
-        ├── en.json
-        ├── es.json
-        ├── fr.json
-        ├── hi.json
-        ├── it.json
-        ├── ja.json
-        ├── ko.json
-        ├── nl.json
-        ├── no.json
-        ├── pl.json
-        ├── pt.json
-        ├── ru.json
-        ├── sv.json
-        ├── tr.json
-        ├── uk.json
-        └── zh.json
 ```
 
-Runtime temporary files are stored outside the repository and are excluded from Git.
+Runtime temporary files are stored in:
 
----
+```text
+tmp/
+```
+
+The temporary directory is excluded from Git.
+
+## Application structure
+
+### `server.js`
+
+`server.js` is the application composition and bootstrap point.
+
+It is responsible for:
+
+* loading configuration;
+* initializing application services;
+* preparing the temporary directory;
+* preparing frontend translations;
+* creating the Express application;
+* registering routes;
+* starting cleanup;
+* starting the HTTP server.
+
+Business logic is kept outside `server.js` whenever there is a clear module boundary.
+
+### Routes
+
+HTTP route handling is separated into individual modules:
+
+* `routes/events.js` — SSE connections;
+* `routes/file.js` — pending-file management;
+* `routes/bump.js` — bump events;
+* `routes/download.js` — one-time file downloads;
+* `routes/share.js` — temporary share links;
+* `routes/upload.js` — file uploads.
+
+### Services
+
+Application services contain reusable logic that does not need to be implemented directly inside an HTTP route.
+
+* `services/pairing.js` — pairing state machine;
+* `services/rate-limit.js` — rate limiting;
+* `services/cleanup.js` — periodic maintenance;
+* `services/device.js` — device state helpers;
+* `services/sse.js` — SSE event sending;
+* `services/locales.js` — preparation of frontend localization files.
+
+Frontend localization is implemented in `public/js/i18n.js` and the generated files under `public/locales/`.
+
+### Store
+
+`store/memory.js` contains the application's in-memory state.
+
+There is currently no external database or persistent application state.
+
+### Configuration
+
+`config.js` contains server configuration and application limits, including:
+
+* HTTP host and port;
+* temporary directory;
+* upload limits;
+* per-IP limits;
+* pairing timing;
+* file lifetime;
+* download-token lifetime;
+* share-link lifetime.
 
 ## Development / production workflow
 
@@ -137,182 +222,172 @@ origin/develop -> development
 origin/main    -> production
 ```
 
-Changes should normally be developed and tested on `develop` first.
+Development changes are made on `develop`.
 
-Production is updated only after the development version has been verified.
+Production is kept separate on `main` and should not be modified directly during development.
 
-The application is run as a systemd service in both environments.
+Both environments run as systemd services.
 
----
+## Development principles
+
+### Preserve behavior
+
+Refactoring should preserve the existing application behavior.
+
+After each significant change:
+
+1. run syntax checks;
+2. run the automated tests;
+3. restart the development/test service;
+4. verify the affected functionality;
+5. inspect the Git diff;
+6. commit the change;
+7. push `develop`.
+
+Production should only be updated after the development version has been verified.
+
+### Keep responsibilities separated
+
+New modules should have a clear responsibility.
+
+Avoid unnecessary coupling between:
+
+* HTTP routes;
+* application services;
+* application state;
+* configuration;
+* frontend code.
+
+Prefer dependency injection when it keeps modules independent and testable.
+
+### Do not over-engineer
+
+Bump is intentionally lightweight.
+
+Do not introduce Redis, databases, queues, message brokers, or other infrastructure unless there is a concrete requirement for them.
+
+The current in-memory architecture is intentional.
 
 ## Current refactoring status
 
 The original application was implemented largely in a single `server.js`.
 
-The code has now been separated incrementally while preserving the existing behavior after each step.
+The code is being separated incrementally while preserving existing behavior.
 
-### Completed
+Completed refactoring steps include:
 
-1. Frontend moved into `public/`.
-2. CSS moved into `public/css/style.css`.
-3. Frontend JavaScript moved into `public/js/app.js`.
-4. QRCode library kept locally under `public/`.
-5. Frontend localization extracted into `public/js/i18n.js` and `public/locales/`.
-6. Server configuration extracted into `src/config.js`.
-7. In-memory application state extracted into `src/store/memory.js`.
-8. Rate limiting extracted into `src/services/rate-limit.js`.
-9. Pairing logic extracted into `src/services/pairing.js`.
-10. Cleanup / maintenance logic extracted into `src/services/cleanup.js`.
-11. SSE events route extracted into `src/routes/events.js`.
-12. File management route extracted into `src/routes/file.js`.
-13. Share-link route extracted into `src/routes/share.js`.
-14. Bump route extracted into `src/routes/bump.js`.
-15. Download route extracted into `src/routes/download.js`.
-16. Upload route extracted into `src/routes/upload.js`.
+1. frontend moved into `public/`;
+2. CSS moved into `public/css/style.css`;
+3. frontend JavaScript moved into `public/js/app.js`;
+4. QRCode library kept locally under `public/`;
+5. frontend localization implemented through `public/js/i18n.js` and `public/locales/`;
+6. server configuration extracted into `src/config.js`;
+7. in-memory application state extracted into `src/store/memory.js`;
+8. rate limiting extracted into `src/services/rate-limit.js`;
+9. pairing logic extracted into `src/services/pairing.js`;
+10. cleanup and maintenance logic extracted into `src/services/cleanup.js`;
+11. SSE route extracted into `src/routes/events.js`;
+12. file-management route extracted into `src/routes/file.js`;
+13. share-link route extracted into `src/routes/share.js`;
+14. bump route extracted into `src/routes/bump.js`;
+15. download route extracted into `src/routes/download.js`;
+16. upload route extracted into `src/routes/upload.js`;
+17. localization preparation extracted into `src/services/locales.js`;
+18. device state helpers extracted into `src/services/device.js`;
+19. SSE sending extracted into `src/services/sse.js`.
 
-The main HTTP routes have now been extracted from `server.js`.
+The current `server.js` is primarily responsible for application composition and bootstrap.
 
-`server.js` is intended to remain primarily an application composition/bootstrap file.
+The refactoring remains incremental: module boundaries should only be introduced when they represent a clear responsibility.
 
----
+## Tests
 
-## Important design principles
+The project uses Node's built-in test runner.
 
-### Keep the current behavior working
+Run the test suite with:
 
-Refactoring should be incremental.
-
-After each significant change:
-
-1. run syntax checks;
-2. restart the development/test service;
-3. test the affected functionality;
-4. inspect the diff;
-5. commit the working change;
-6. push `develop`.
-
-Production should not be modified until the development version has been verified.
-
-### Keep responsibilities separated
-
-New modules should have a clear responsibility and should avoid unnecessary knowledge of Express, HTTP request/response objects, or unrelated application internals.
-
-Prefer dependency injection where it keeps modules independent and testable.
-
-### Do not over-engineer
-
-Bump is a personal, lightweight application.
-
-Do not introduce Redis, databases, queues, or other infrastructure unless there is a concrete requirement for them.
-
----
-
-# Project roadmap
-
-This roadmap records **future intentions**.
-
-It does not describe implemented functionality.
-
-A future developer or LLM must not interpret an item below as already implemented unless the repository and Git history confirm it.
-
-## Phase 0 — Stabilization
-
-**Completed.**
-
-The stabilization phase has been completed and validated on the development branch.
-
-Completed goals:
-
-* README maintained as project memory;
-* known stable Git baseline established;
-* stable baseline tagged as `v0.1.0`;
-* automated regression tests implemented;
-* full automated test suite passing: **44/44**;
-* manual end-to-end validation completed on the test deployment;
-* upload, download, sharing, pairing, cleanup, rate limiting and localization manually validated.
-
-### Stable baseline
-
-```text
-Stable commit: b4f534f
-Stable tag: v0.1.0
-Transfer: server-side HTTP
-WebRTC: not implemented
-Automated tests: 44/44 passing
+```bash
+npm test
 ```
 
-The `main` branch remains at the `v0.1.0` baseline. Further development continues on `develop`.
+The current development branch has automated coverage for:
 
----
+* localization;
+* pairing;
+* uploads;
+* downloads;
+* share links;
+* rate limiting;
+* cleanup.
 
-## Phase 1 — Architecture / cleanup
+At the current development state, the test suite contains 44 tests.
 
-The major route extraction has been completed.
+The development service is also tested separately from the unit tests to verify that the complete application can start successfully.
 
-Remaining goals may include:
+## Future WebRTC roadmap
 
-* review `server.js`;
-* remove obsolete imports and dead code;
-* clarify service boundaries;
-* improve dependency injection where useful;
-* keep the application composition/bootstrap layer small.
+The long-term goal is to make the actual file transfer peer-to-peer whenever possible.
 
-This phase should remain incremental and should not introduce unnecessary abstraction.
-
----
-
-## Phase 2 — Security hardening
-
-Review and, where appropriate, improve:
-
-* upload limits;
-* per-IP limits;
-* concurrent connections;
-* temporary-file handling;
-* token entropy and expiration;
-* single-use token behavior;
-* SSE connection cleanup;
-* HTTP security headers;
-* error handling;
-* malformed or abusive requests.
-
-Security changes must preserve the normal transfer workflow.
-
----
-
-## Phase 3 — WebRTC / P2P
-
-Long-term goal: transfer the file directly between the two browsers when possible.
+The server should remain responsible for coordination and signaling, but should not normally receive the file.
 
 Target architecture:
 
 ```text
-                 Bump server
-              signaling / pairing
-                  /         \
-                 /           \
-                v             v
-           Browser A <----> Browser B
+                  Bump server
+               signaling / pairing
+                    /       \
+                   /         \
+                  v           v
+             Browser A <----> Browser B
                     WebRTC
                  DataChannel
 ```
+
+The existing server-side transfer must remain available as a fallback.
+
+### Phase 1 — Basic P2P
+
+Introduce WebRTC using:
+
+* `RTCPeerConnection`;
+* `RTCDataChannel`.
 
 Initial goals:
 
 * establish a WebRTC connection between two paired browsers;
 * exchange signaling information through the Bump server;
 * transfer a small file directly between the two devices;
-* initially test on simple networks such as the same LAN.
+* initially test in simple network conditions such as devices on the same LAN.
 
-The existing server-side transfer must remain available during development.
+The existing server-side transfer remains available during development.
 
----
+### Phase 2 — Robust file transfer
 
-## Phase 4 — Server fallback
+Make WebRTC transfer suitable for real files:
 
-WebRTC should not become a single point of failure.
+* chunking;
+* large files;
+* multiple files;
+* transfer progress;
+* backpressure;
+* cancellation;
+* timeouts;
+* connection errors;
+* browser/mobile compatibility;
+* appropriate memory usage.
 
-Target behavior:
+### Phase 3 — Internet connectivity
+
+Handle real-world network conditions using WebRTC ICE:
+
+* STUN;
+* ICE candidate exchange;
+* connection establishment across different networks;
+* TURN as a relay when a direct P2P connection cannot be established.
+
+### Final transfer strategy
+
+The intended behavior is:
 
 ```text
                  Pairing / signaling
@@ -329,159 +404,52 @@ Target behavior:
 
 The fallback should be automatic and transparent to the user whenever possible.
 
-The server-side transfer is therefore not considered obsolete. It remains an important compatibility and reliability mechanism.
+The server-side transfer is therefore not considered obsolete: it remains an important compatibility and reliability mechanism.
 
----
-
-## Phase 5 — User experience
-
-Improve transfer feedback and usability:
-
-* upload/download progress;
-* transfer speed;
-* remaining time;
-* clear connection states;
-* cancellation;
-* useful error messages;
-* better mobile behavior;
-* clearer indication of whether the transfer is P2P or server-side, if useful.
-
----
-
-## Phase 6 — Reliability
-
-Handle real-world failure cases:
-
-* browser closing during transfer;
-* device going offline;
-* network changes;
-* Wi-Fi changes;
-* disconnected SSE sessions;
-* interrupted uploads;
-* interrupted downloads;
-* failed WebRTC connections;
-* simultaneous pairing attempts;
-* multiple devices bumping at nearly the same time;
-* large files;
-* multiple files.
-
----
-
-## Phase 7 — Automated tests
-
-Introduce automated tests for the most important application logic, including:
-
-* pairing;
-* rate limiting;
-* upload handling;
-* download handling;
-* share links;
-* token expiration;
-* cleanup;
-* error cases.
-
-The goal is to reduce dependence on manual two-device testing for every change.
-
----
-
-## Phase 8 — CI / releases
-
-After automated tests exist:
-
-* add GitHub Actions;
-* run syntax checks and tests on pushes/pull requests;
-* keep `main` releasable;
-* introduce semantic versioning where appropriate;
-* maintain a changelog;
-* create tagged releases.
-
----
-
-# Future WebRTC technical roadmap
-
-The WebRTC implementation is expected to use browser-native APIs such as:
-
-* `RTCPeerConnection`;
-* `RTCDataChannel`;
-* ICE candidate exchange;
-* STUN;
-* TURN when necessary.
-
-For real file transfers, the implementation will eventually need to address:
-
-* chunking;
-* large files;
-* multiple files;
-* backpressure;
-* memory usage;
-* progress reporting;
-* cancellation;
-* timeouts;
-* connection failures;
-* browser compatibility;
-* mobile compatibility.
-
-These are planned capabilities, not current capabilities.
-
----
-
-# Future LLM / developer context
+## Future developer / LLM context
 
 When continuing development from this repository, first inspect:
 
 1. `README.md`;
 2. the current Git branch;
-3. the current Git status;
-4. `server.js`;
-5. `src/config.js`;
-6. `src/store/memory.js`;
+3. `server.js`;
+4. `src/config.js`;
+5. `src/store/memory.js`;
+6. `src/routes/`;
 7. `src/services/`;
-8. `src/routes/`;
-9. recent Git history.
+8. `src/locales/`.
 
 Do not assume that the roadmap has already been implemented.
 
-**The repository state and Git history are authoritative.**
+The repository state and Git history are authoritative.
 
-If the README and the code disagree, inspect the code and Git history before making changes.
+The preferred development approach is incremental:
 
-### Preferred development approach
-
-For each coherent change:
-
-1. inspect the current implementation;
-2. make one small change;
-3. run syntax checks;
-4. restart the development/test service;
-5. test the affected functionality;
-6. inspect the diff;
-7. commit the working change;
-8. push `develop`;
-9. only after validation consider promoting it to `main`.
+* understand the current implementation;
+* make one coherent change;
+* run syntax checks;
+* run the test suite;
+* test the development service;
+* inspect the diff;
+* commit the working change;
+* push `develop`;
+* only then continue with the next change.
 
 Avoid changing production directly during development.
 
----
-
-# Current status
+## Current status
 
 At the current development state:
 
-* the development branch is `develop`;
-* the production branch is `main`;
-* `main` remains at the stable `v0.1.0` baseline;
-* `develop` contains the ongoing development work after `v0.1.0`;
+* `main` contains the stable production baseline;
+* `develop` contains the ongoing refactoring;
 * the development/test instance is working;
-* the production instance is working;
-* the frontend is localized;
-* the application has been refactored into routes, services, store, and configuration modules;
-* server-side HTTP file transfer is the active transfer mechanism;
-* WebRTC/P2P transfer has **not** been implemented;
-* automatic WebRTC fallback has **not** been implemented;
-* automated regression tests are implemented;
-* the current automated test suite passes **44/44 tests**;
-* CI has **not** yet been implemented.
+* the production instance remains separate;
+* the server-side transfer is the current operational transfer mechanism;
+* frontend localization is implemented;
+* the application has been separated into routes, services, store, configuration and localization components;
+* automated tests currently pass;
+* WebRTC/P2P transfer has not yet been implemented;
+* automatic P2P-to-server fallback has not yet been implemented.
 
-**Phase 0 — Stabilization is completed.**
-
-The next planned milestone is **Phase 1 — Architecture / cleanup**.
+The next development work should continue from the current `develop` branch rather than from the production `main` branch.
