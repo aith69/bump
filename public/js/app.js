@@ -11,7 +11,7 @@ new QRCode($('#qrcode'), {
   correctLevel: QRCode.CorrectLevel.L
 });
 
-const MAX = 50 * 1024 * 1024;
+const MAX = window.appConfig.maxBytes;
 
 // identificativo casuale del dispositivo (una scheda del browser = un dispositivo)
 function makeId() {
@@ -131,7 +131,7 @@ $('#share').onclick = async () => {
     correctLevel: QRCode.CorrectLevel.L
   });
   sharing = true;
-  startCountdown(3 * 60 * 1000);   // deve combaciare con SHARE_TTL in server.js
+  startCountdown(window.appConfig.shareTtl);
   render();
 };
 $('#shareclose').onclick = () => { clearInterval(shareTimer); sharing = false; render(); };

@@ -107,6 +107,25 @@
 
     applyTranslations();
 
+    const configResponse = await fetch('/config', {
+      cache: 'no-cache',
+    });
+
+    if (!configResponse.ok) {
+      throw new Error('Unable to load application configuration');
+    }
+
+    window.appConfig = await configResponse.json();
+
+    if (
+      !Number.isInteger(window.appConfig.maxBytes) ||
+      window.appConfig.maxBytes <= 0 ||
+      !Number.isInteger(window.appConfig.shareTtl) ||
+      window.appConfig.shareTtl <= 0
+    ) {
+      throw new Error('Invalid application configuration');
+    }
+
     const script = document.createElement('script');
     script.src = '/js/app.js';
     document.body.appendChild(script);

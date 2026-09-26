@@ -14,6 +14,7 @@ const createBumpRouter = require('./src/routes/bump');
 const createDownloadRouter = require('./src/routes/download');
 const createShareRouter = require('./src/routes/share');
 const createUploadRouter = require('./src/routes/upload');
+const createConfigRouter = require('./src/routes/config');
 const prepareLocales = require('./src/services/locales');
 const {
   PORT,
@@ -60,6 +61,13 @@ const ID_RE = /^[0-9a-f]{32}$/;
 const app = express();
 app.disable('x-powered-by');
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(
+  createConfigRouter({
+    maxBytes: MAX_BYTES,
+    shareTtl: SHARE_TTL,
+  })
+);
 // dietro nginx serve leggere l'IP reale da X-Forwarded-For; TRUST_PROXY=true per fidarsi di qualsiasi proxy
 const tp = process.env.TRUST_PROXY;
 app.set('trust proxy', tp === 'true' ? true : tp || 'loopback, uniquelocal');
