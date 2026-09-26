@@ -15,6 +15,7 @@ const createDownloadRouter = require('./src/routes/download');
 const createShareRouter = require('./src/routes/share');
 const createUploadRouter = require('./src/routes/upload');
 const createConfigRouter = require('./src/routes/config');
+const createWebrtc = require('./src/services/webrtc');
 const prepareLocales = require('./src/services/locales');
 const {
   PORT,
@@ -35,6 +36,11 @@ const limited = createRateLimiter(hits);
 
 const deviceService = createDeviceService();
 const { stateOf, dropPending } = deviceService;
+
+const webrtc = createWebrtc({
+  sessions: state.webrtcSessions,
+  ttl: 30000,
+});
 
 const sse = createSse();
 const { send } = sse;
