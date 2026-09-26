@@ -361,6 +361,91 @@ Initial goals:
 
 The existing server-side transfer remains available during development.
 
+### WebRTC signaling design
+
+The first WebRTC implementation will use the existing Bump server as a signaling relay.
+
+The server will coordinate the peers but will not participate in the actual file transfer.
+
+The signaling flow is:
+
+```text
+Browser A                    Bump server                    Browser B
+    |                              |                              |
+    |------ pairing -------------->|<------------- pairing -------|
+    |                              |                              |
+    |<----- session-ready ---------|------ session-ready -------->|
+    |                              |                              |
+    |---------- offer ------------>|---------- offer ------------>|
+    |                              |                              |
+    |<--------- answer ------------|<--------- answer ------------|
+    |                              |                              |
+    |---------- ICE -------------->|---------- ICE -------------->|
+    |<--------- ICE ---------------|<--------- ICE ---------------|
+    |                              |                              |
+    |========== WebRTC DataChannel / P2P ========================|
+```
+
+A successful pairing creates a short-lived WebRTC session between the two devices.
+
+The signaling protocol will initially use these message types:
+
+* `webrtc-offer`;
+* `webrtc-answer`;
+* `webrtc-ice`.
+
+Each signaling message belongs to a specific WebRTC session.
+
+Conceptual offer:
+
+```json
+{
+  "type": "webrtc-offer",
+  "session": "session-id",
+  "description": {
+    "type": "offer",
+    "sdp": "..."
+  }
+}
+```
+
+Conceptual answer:
+
+```json
+{
+  "type": "webrtc-answer",
+  "session": "session-id",
+  "description": {
+    "type": "answer",
+    "sdp": "..."
+  }
+}
+```
+
+Conceptual ICE candidate:
+
+```json
+{
+  "type": "webrtc-ice",
+  "session": "session-id",
+  "candidate": {
+    "...": "..."
+  }
+}
+```
+
+The exact contents of SDP and ICE candidates are generated and interpreted by the browser. The Bump server only validates the session and peer association and forwards the signaling messages to the other device.
+
+The signaling session must be associated with the two device IDs that were produced by the existing pairing mechanism. A signaling message from another device must not be accepted for that session.
+
+The WebRTC session is therefore derived from the existing pairing mechanism rather than introducing a second device-discovery mechanism.
+
+During Phase 1, the signaling implementation will initially be tested on simple network conditions, especially devices connected to the same LAN.
+
+No STUN or TURN infrastructure is required for the first local-network prototype. Internet connectivity and TURN fallback are part of Phase 3.
+
+The existing server-side file transfer remains unchanged while the WebRTC prototype is developed.
+
 ### Phase 2 — Robust file transfer
 
 Make WebRTC transfer suitable for real files:
