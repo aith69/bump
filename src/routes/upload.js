@@ -4,6 +4,25 @@ const path = require('path');
 const crypto = require('crypto');
 const { pipeline, Transform } = require('stream');
 
+const MAX_FILENAME_BYTES = 255;
+
+function normalizeFilename(value) {
+  const input = path.basename(String(value || 'file'));
+  let name = '';
+
+  for (const char of input) {
+    const candidate = name + char;
+
+    if (Buffer.byteLength(candidate, 'utf8') > MAX_FILENAME_BYTES) {
+      break;
+    }
+
+    name = candidate;
+  }
+
+  return name || 'file';
+}
+
 function createUploadRouter({
   devices,
   limited,
@@ -43,7 +62,7 @@ function createUploadRouter({
 
     d.ip = req.ip;
 
-    const name = path.basename(String(req.query.name || 'file'));
+    const name = normalizeFilename(req.query.name);
     const file = path.join(dir, crypto.randomUUID());
 
     let size = 0;

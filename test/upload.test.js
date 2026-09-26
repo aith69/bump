@@ -345,6 +345,147 @@ test('upload: upload valido -> pending + 200 + state', async () => {
   await fs.promises.rm(dir, { recursive: true, force: true });
 });
 
+test('upload: filename entro 255 byte viene mantenuto', async () => {
+  const dir = await fs.promises.mkdtemp(
+    path.join(os.tmpdir(), 'bump-upload-')
+  );
+
+  const devices = new Map([
+    ['device1', {
+      pending: null,
+      uploading: false,
+    }],
+  ]);
+
+  const res = createResponse();
+
+  const handler = getUploadHandler({
+    devices,
+    dir,
+    maxBytes: 100,
+  });
+
+  const name = `${'a'.repeat(251)}.txt`;
+
+  const req = Readable.from([
+    Buffer.from('hello'),
+  ]);
+
+  req.query = {
+    id: 'device1',
+    name,
+  };
+  req.ip = '127.0.0.1';
+  req.headers = {
+    'content-length': '5',
+  };
+
+  handler(req, res);
+
+  await waitFor(() => res.statusCode !== null);
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(devices.get('device1').pending.name, name);
+  assert.equal(
+    Buffer.byteLength(devices.get('device1').pending.name, 'utf8'),
+    255
+  );
+
+  await fs.promises.rm(dir, { recursive: true, force: true });
+});
+
+test('upload: filename oltre 255 byte viene troncato', async () => {
+  const dir = await fs.promises.mkdtemp(
+    path.join(os.tmpdir(), 'bump-upload-')
+  );
+
+  const devices = new Map([
+    ['device1', {
+      pending: null,
+      uploading: false,
+    }],
+  ]);
+
+  const res = createResponse();
+
+  const handler = getUploadHandler({
+    devices,
+    dir,
+    maxBytes: 100,
+  });
+
+  const req = Readable.from([
+    Buffer.from('hello'),
+  ]);
+
+  req.query = {
+    id: 'device1',
+    name: `${'a'.repeat(300)}.txt`,
+  };
+  req.ip = '127.0.0.1';
+  req.headers = {
+    'content-length': '5',
+  };
+
+  handler(req, res);
+
+  await waitFor(() => res.statusCode !== null);
+
+  const name = devices.get('device1').pending.name;
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(Buffer.byteLength(name, 'utf8'), 255);
+  assert.equal(name, 'a'.repeat(255));
+
+  await fs.promises.rm(dir, { recursive: true, force: true });
+});
+
+test('upload: filename Unicode viene troncato senza spezzare caratteri', async () => {
+  const dir = await fs.promises.mkdtemp(
+    path.join(os.tmpdir(), 'bump-upload-')
+  );
+
+  const devices = new Map([
+    ['device1', {
+      pending: null,
+      uploading: false,
+    }],
+  ]);
+
+  const res = createResponse();
+
+  const handler = getUploadHandler({
+    devices,
+    dir,
+    maxBytes: 100,
+  });
+
+  const req = Readable.from([
+    Buffer.from('hello'),
+  ]);
+
+  req.query = {
+    id: 'device1',
+    name: '😀'.repeat(100),
+  };
+  req.ip = '127.0.0.1';
+  req.headers = {
+    'content-length': '5',
+  };
+
+  handler(req, res);
+
+  await waitFor(() => res.statusCode !== null);
+
+  const name = devices.get('device1').pending.name;
+
+  assert.equal(res.statusCode, 200);
+  assert.ok(Buffer.byteLength(name, 'utf8') <= 255);
+  assert.equal(name, '😀'.repeat(63));
+
+  await fs.promises.rm(dir, { recursive: true, force: true });
+});
+
 test('upload: body oltre limite -> 413 e file temporaneo rimosso', async () => {
   const dir = await fs.promises.mkdtemp(
     path.join(os.tmpdir(), 'bump-upload-')
