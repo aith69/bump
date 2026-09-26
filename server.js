@@ -16,6 +16,7 @@ const createShareRouter = require('./src/routes/share');
 const createUploadRouter = require('./src/routes/upload');
 const createConfigRouter = require('./src/routes/config');
 const createWebrtc = require('./src/services/webrtc');
+const createWebrtcRouter = require('./src/routes/webrtc');
 const prepareLocales = require('./src/services/locales');
 const {
   PORT,
@@ -45,6 +46,12 @@ const webrtc = createWebrtc({
 const sse = createSse();
 const { send } = sse;
 
+const webrtcRouter = createWebrtcRouter({
+  webrtc,
+  devices,
+  send,
+});
+
 const pairing = createPairing({
   state,
   devices,
@@ -67,6 +74,8 @@ const ID_RE = /^[0-9a-f]{32}$/;
 const app = express();
 app.disable('x-powered-by');
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(webrtcRouter);
 
 app.use(
   createConfigRouter({
