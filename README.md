@@ -320,7 +320,7 @@ The current development branch has automated coverage for:
 * rate limiting;
 * cleanup.
 
-At the current development state, the test suite contains 44 tests.
+At the current development state, the test suite contains 50 tests.
 
 The development service is also tested separately from the unit tests to verify that the complete application can start successfully.
 
