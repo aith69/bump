@@ -61,10 +61,12 @@ function createPairing({
 
     send(sender, 'webrtc-session', {
       sessionId: session.id,
+      role: 'offerer',
     });
 
     send(receiver, 'webrtc-session', {
       sessionId: session.id,
+      role: 'answerer',
     });
 
     send(receiver, 'download', {

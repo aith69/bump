@@ -50,6 +50,8 @@ const webrtcRouter = createWebrtcRouter({
   webrtc,
   devices,
   send,
+  dropPending,
+  stateOf,
 });
 
 const pairing = createPairing({

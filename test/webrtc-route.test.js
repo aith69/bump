@@ -9,6 +9,8 @@ function createTestServer() {
   const sessions = new Map();
   const devices = new Map();
   const messages = [];
+  const removedSessions = [];
+  const droppedPending = [];
 
   const router = createWebrtcRouter({
     webrtc: {
@@ -20,10 +22,23 @@ function createTestServer() {
         return !!session &&
           (session.a === deviceId || session.b === deviceId);
       },
+      remove(id) {
+        removedSessions.push(id);
+        return sessions.delete(id);
+      },
     },
     devices,
     send(device, event, data) {
       messages.push({ device, event, data });
+    },
+    dropPending(device) {
+      droppedPending.push(device);
+      device.pending = null;
+    },
+    stateOf(device) {
+      return {
+        pending: !!device.pending,
+      };
     },
   });
 
@@ -33,7 +48,14 @@ function createTestServer() {
 
   const server = http.createServer(app);
 
-  return { server, sessions, devices, messages };
+  return {
+    server,
+    sessions,
+    devices,
+    messages,
+    removedSessions,
+    droppedPending,
+  };
 }
 
 function request(server, method, path, body) {
@@ -279,4 +301,203 @@ test('webrtc route: inoltra answer e ice al peer corretto', async () => {
       },
     },
   ]);
+});
+
+test('webrtc complete: il destinatario conferma il trasferimento P2P', async () => {
+  const {
+    server,
+    sessions,
+    devices,
+    messages,
+    removedSessions,
+    droppedPending,
+  } = createTestServer();
+
+  addSession(sessions);
+
+  const sender = {
+    id: 'device-a',
+    pending: {
+      file: '/tmp/test-file',
+      name: 'test.txt',
+    },
+  };
+
+  const receiver = {
+    id: 'device-b',
+    pending: null,
+  };
+
+  devices.set(sender.id, sender);
+  devices.set(receiver.id, receiver);
+
+  await new Promise((resolve) => server.listen(0, resolve));
+
+  const result = await request(server, 'POST', '/webrtc/complete', {
+    sessionId: 'session-1',
+    deviceId: 'device-b',
+  });
+
+  assert.equal(result.status, 200);
+  assert.deepEqual(result.body, { ok: true });
+
+  assert.equal(sender.pending, null);
+  assert.deepEqual(droppedPending, [sender]);
+  assert.deepEqual(removedSessions, ['session-1']);
+  assert.equal(sessions.has('session-1'), false);
+
+  assert.deepEqual(messages, [
+    {
+      device: sender,
+      event: 'state',
+      data: { pending: false },
+    },
+    {
+      device: sender,
+      event: 'done',
+      data: {},
+    },
+  ]);
+
+  await new Promise((resolve) => server.close(resolve));
+});
+
+test('webrtc complete: il mittente non può confermare il trasferimento', async () => {
+  const {
+    server,
+    sessions,
+    devices,
+    removedSessions,
+  } = createTestServer();
+
+  addSession(sessions);
+
+  const sender = {
+    id: 'device-a',
+    pending: {
+      file: '/tmp/test-file',
+      name: 'test.txt',
+    },
+  };
+
+  const receiver = {
+    id: 'device-b',
+    pending: null,
+  };
+
+  devices.set(sender.id, sender);
+  devices.set(receiver.id, receiver);
+
+  await new Promise((resolve) => server.listen(0, resolve));
+
+  const result = await request(server, 'POST', '/webrtc/complete', {
+    sessionId: 'session-1',
+    deviceId: 'device-a',
+  });
+
+  assert.equal(result.status, 403);
+  assert.deepEqual(result.body, {
+    error: 'Sender cannot complete transfer',
+  });
+
+  assert.notEqual(sender.pending, null);
+  assert.deepEqual(removedSessions, []);
+
+  await new Promise((resolve) => server.close(resolve));
+});
+
+test('webrtc complete: restituisce 409 se il mittente non ha più un file pendente', async () => {
+  const {
+    server,
+    sessions,
+    devices,
+    removedSessions,
+  } = createTestServer();
+
+  addSession(sessions);
+
+  const sender = {
+    id: 'device-a',
+    pending: null,
+  };
+
+  const receiver = {
+    id: 'device-b',
+    pending: null,
+  };
+
+  devices.set(sender.id, sender);
+  devices.set(receiver.id, receiver);
+
+  await new Promise((resolve) => server.listen(0, resolve));
+
+  const result = await request(server, 'POST', '/webrtc/complete', {
+    sessionId: 'session-1',
+    deviceId: 'device-b',
+  });
+
+  assert.equal(result.status, 409);
+  assert.deepEqual(result.body, {
+    error: 'No pending file',
+  });
+
+  assert.deepEqual(removedSessions, []);
+  assert.equal(sessions.has('session-1'), true);
+
+  await new Promise((resolve) => server.close(resolve));
+});
+
+test('webrtc complete: un device estraneo non può confermare', async () => {
+  const {
+    server,
+    sessions,
+    devices,
+  } = createTestServer();
+
+  addSession(sessions);
+
+  devices.set('device-a', {
+    id: 'device-a',
+    pending: {
+      file: '/tmp/test-file',
+      name: 'test.txt',
+    },
+  });
+
+  devices.set('device-b', {
+    id: 'device-b',
+    pending: null,
+  });
+
+  await new Promise((resolve) => server.listen(0, resolve));
+
+  const result = await request(server, 'POST', '/webrtc/complete', {
+    sessionId: 'session-1',
+    deviceId: 'device-c',
+  });
+
+  assert.equal(result.status, 403);
+  assert.deepEqual(result.body, {
+    error: 'Not a session peer',
+  });
+
+  await new Promise((resolve) => server.close(resolve));
+});
+
+test('webrtc complete: restituisce 404 per una sessione inesistente', async () => {
+  const { server } = createTestServer();
+
+  await new Promise((resolve) => server.listen(0, resolve));
+
+  const result = await request(server, 'POST', '/webrtc/complete', {
+    sessionId: 'does-not-exist',
+    deviceId: 'device-b',
+  });
+
+  assert.equal(result.status, 404);
+  assert.deepEqual(result.body, {
+    error: 'Session not found',
+  });
+
+  await new Promise((resolve) => server.close(resolve));
 });

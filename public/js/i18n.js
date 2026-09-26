@@ -126,9 +126,20 @@
       throw new Error('Invalid application configuration');
     }
 
-    const script = document.createElement('script');
-    script.src = '/js/app.js';
-    document.body.appendChild(script);
+    const fallbackScript = document.createElement('script');
+    fallbackScript.src = '/js/webrtc-fallback.js';
+
+    fallbackScript.onload = () => {
+      const script = document.createElement('script');
+      script.src = '/js/app.js';
+      document.body.appendChild(script);
+    };
+
+    fallbackScript.onerror = () => {
+      throw new Error('Unable to load WebRTC fallback module');
+    };
+
+    document.body.appendChild(fallbackScript);
   }
 
   init().catch((err) => {
