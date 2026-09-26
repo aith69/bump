@@ -4,6 +4,7 @@ function createPairing({
   state,
   devices,
   send,
+  webrtc,
   pairWindow,
   settle,
   lookback,
@@ -54,7 +55,17 @@ function createPairing({
     sender.pending.token = token;
     sender.pending.tokenExp = now + tokenTtl;
 
+    const session = webrtc.create(sender.id, receiver.id);
+
     state.bumps = [];
+
+    send(sender, 'webrtc-session', {
+      sessionId: session.id,
+    });
+
+    send(receiver, 'webrtc-session', {
+      sessionId: session.id,
+    });
 
     send(receiver, 'download', {
       url: `/download?t=${token}`,

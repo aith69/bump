@@ -17,6 +17,22 @@ function createFixture() {
 
   const sent = [];
 
+  const webrtcSessions = [];
+
+  const webrtc = {
+    create(a, b) {
+      const session = {
+        id: `session-${webrtcSessions.length + 1}`,
+        a,
+        b,
+      };
+
+      webrtcSessions.push(session);
+
+      return session;
+    },
+  };
+
   const send = (device, event, data) => {
     sent.push({ device, event, data });
   };
@@ -25,6 +41,7 @@ function createFixture() {
     state,
     devices,
     send,
+    webrtc,
     pairWindow: PAIR_WINDOW,
     settle: SETTLE,
     lookback: LOOKBACK,
@@ -36,6 +53,7 @@ function createFixture() {
     devices,
     sent,
     pairing,
+    webrtcSessions,
   };
 }
 
@@ -71,7 +89,7 @@ test('key + motion pairs two different devices', (context) => {
     now: 1000,
   });
 
-  const { state, devices, sent, pairing } = createFixture();
+  const { state, devices, sent, pairing, webrtcSessions } = createFixture();
 
   const sender = addDevice(devices, 'a', {
     pending: addPending(),
@@ -84,11 +102,31 @@ test('key + motion pairs two different devices', (context) => {
 
   settle(context);
 
-  assert.equal(sent.length, 1);
-  assert.equal(sent[0].device, receiver);
-  assert.equal(sent[0].event, 'download');
+  assert.equal(sent.length, 3);
 
-  const url = sent[0].data.url;
+  assert.equal(sent[0].device, sender);
+  assert.equal(sent[0].event, 'webrtc-session');
+
+  assert.equal(sent[1].device, receiver);
+  assert.equal(sent[1].event, 'webrtc-session');
+
+  assert.equal(sent[2].device, receiver);
+  assert.equal(sent[2].event, 'download');
+
+  const sessionId = sent[0].data.sessionId;
+
+  assert.match(sessionId, /^session-1$/);
+  assert.equal(sent[1].data.sessionId, sessionId);
+
+  assert.deepEqual(webrtcSessions, [
+    {
+      id: sessionId,
+      a: 'a',
+      b: 'b',
+    },
+  ]);
+
+  const url = sent[2].data.url;
 
   assert.match(url, /^\/download\?t=[0-9a-f]{32}$/);
 
@@ -118,10 +156,13 @@ test('motion + key pairs two different devices', (context) => {
 
   settle(context);
 
-  assert.equal(sent.length, 1);
-  assert.equal(sent[0].device, receiver);
-  assert.equal(sent[0].event, 'download');
+  assert.equal(sent.length, 3);
+  assert.equal(sent[0].event, 'webrtc-session');
+  assert.equal(sent[1].event, 'webrtc-session');
+  assert.equal(sent[2].device, receiver);
+  assert.equal(sent[2].event, 'download');
 
+  assert.equal(sent[0].data.sessionId, sent[1].data.sessionId);
   assert.ok(sender.pending.token);
   assert.match(sender.pending.token, /^[0-9a-f]{32}$/);
 });
@@ -145,8 +186,13 @@ test('motion + motion pairs two phones', (context) => {
 
   settle(context);
 
-  assert.equal(sent.length, 1);
-  assert.equal(sent[0].device, receiver);
+  assert.equal(sent.length, 3);
+  assert.equal(sent[0].event, 'webrtc-session');
+  assert.equal(sent[1].event, 'webrtc-session');
+  assert.equal(sent[2].device, receiver);
+  assert.equal(sent[2].event, 'download');
+
+  assert.equal(sent[0].data.sessionId, sent[1].data.sessionId);
   assert.ok(sender.pending.token);
 });
 

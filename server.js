@@ -56,6 +56,7 @@ const pairing = createPairing({
   state,
   devices,
   send,
+  webrtc,
   pairWindow: PAIR_WINDOW,
   settle: SETTLE,
   lookback: LOOKBACK,
